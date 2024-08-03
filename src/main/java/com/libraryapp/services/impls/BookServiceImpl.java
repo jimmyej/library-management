@@ -1,6 +1,7 @@
 package com.libraryapp.services.impls;
 
 import com.libraryapp.entities.Book;
+import com.libraryapp.enums.CommonConstants;
 import com.libraryapp.repositories.BookRepository;
 import com.libraryapp.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,13 @@ public class BookServiceImpl implements BookService {
     public boolean removeBookByIsbnCode(String isbnCode) {
         boolean isDeleted = false;
         try {
-            bookRepository.deleteByIsbnCode(isbnCode);
-            isDeleted = true;
+            boolean existsByIsbnCode = bookRepository.existsByIsbnCode(isbnCode);
+            if(existsByIsbnCode){
+                Book book = bookRepository.findByIsbnCode(isbnCode);
+                book.setActivated(false);
+                bookRepository.save(book);
+                isDeleted = true;
+            }
         } catch(Exception e){
             e.getCause();
         }
@@ -67,15 +73,25 @@ public class BookServiceImpl implements BookService {
     public boolean removeBookById(int bookId) {
         boolean isDeleted = false;
         try {
-            bookRepository.deleteById(bookId);
-            isDeleted = true;
+            boolean existById = bookRepository.existsById(bookId);
+            if(existById){
+                Book book = bookRepository.findById(bookId).get();
+                book.setActivated(false);
+                bookRepository.save(book);
+                isDeleted = true;
+            }
         } catch(Exception e){
             e.getCause();
         }
         return isDeleted;
     }
 
-    public List<Book> getBooksByIsActivated(boolean isActivated) {
-        return bookRepository.findByActivated(isActivated);
+    public List<Book> getBooksByIsActivated(String activated) {
+        if(activated != null){
+            boolean status = activated.equals(CommonConstants.ACTIVATED.name());
+            return bookRepository.findByActivated(status);
+        } else {
+            return (List<Book>) bookRepository.findAll();
+        }
     }
 }

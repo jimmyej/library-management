@@ -3,6 +3,8 @@ package com.libraryapp.controllers;
 import com.libraryapp.entities.Book;
 import com.libraryapp.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,60 +17,94 @@ public class BookController {
     BookService bookService;
 
     @GetMapping("/titles/{title}")
-    @ResponseBody
-    List<Book> getBooksByTitle(@PathVariable String title){
-        return bookService.getBooksByTitle(title);
+    ResponseEntity<List<Book>> getBooksByTitle(@PathVariable String title){
+        List<Book> books = bookService.getBooksByTitle(title);
+        if(books.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(books);
     }
 
     @GetMapping("/genders/{gender}")
-    @ResponseBody
-    List<Book> getBooksByGender(@PathVariable String gender){
-        return bookService.getBooksByGender(gender);
+    ResponseEntity<List<Book>> getBooksByGender(@PathVariable String gender){
+        List<Book> books =  bookService.getBooksByGender(gender);
+        if(books.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(books);
     }
 
     @GetMapping("/authors/{author}")
-    @ResponseBody
-    List<Book> getBooksByAuthor(@PathVariable String author){
-        return bookService.getBooksByAuthor(author);
+    ResponseEntity<List<Book>> getBooksByAuthor(@PathVariable String author){
+        List<Book> books = bookService.getBooksByAuthor(author);
+        if(books.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(books);
     }
 
     @GetMapping("/codes/{isbnCode}")
-    @ResponseBody
-    Book getBookByIsbnCode(@PathVariable String isbnCode){
-        return bookService.getBookByIsbnCode(isbnCode);
+    ResponseEntity<Book> getBookByIsbnCode(@PathVariable String isbnCode){
+        Book book = bookService.getBookByIsbnCode(isbnCode);
+        if(book == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(book);
     }
 
     @GetMapping("/languages/{language}")
-    @ResponseBody
-    List<Book> getBooksByLanguage(@PathVariable String language){
-        return bookService.getBooksByLanguage(language);
+    ResponseEntity<List<Book>> getBooksByLanguage(@PathVariable String language){
+        List<Book> books = bookService.getBooksByLanguage(language);
+        if(books.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(books);
     }
 
     @DeleteMapping("/codes/{isbnCode}")
-    boolean removeBookByIsbnCode(@PathVariable String isbnCode){
-        return bookService.removeBookByIsbnCode(isbnCode);
+    ResponseEntity<Boolean> removeBookByIsbnCode(@PathVariable String isbnCode){
+        boolean removed = bookService.removeBookByIsbnCode(isbnCode);
+        if(!removed){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("")
     @ResponseBody
-    Book registerBook(@RequestBody Book book){
-        return bookService.registerBook(book);
+    ResponseEntity<Book> registerBook(@RequestBody Book book){
+        Book newBook = bookService.registerBook(book);
+        if(newBook != null){
+            return new ResponseEntity<>(newBook, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.FOUND);
     }
 
     @PutMapping("")
     @ResponseBody
-    Book editBook(@RequestBody Book book){
-        return bookService.editBook(book);
+    ResponseEntity<Book> editBook(@RequestBody Book book){
+        Book newBook = bookService.editBook(book);
+        if(newBook == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/ids/{bookId}")
-    boolean removeBookById(@PathVariable int bookId){
-        return bookService.removeBookById(bookId);
+    ResponseEntity<Boolean> removeBookById(@PathVariable int bookId){
+        boolean removed = bookService.removeBookById(bookId);
+        if(!removed){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/status/{isActivated}")
-    @ResponseBody
-    List<Book> getBooksByIsActivated(@PathVariable boolean isActivated){
-        return bookService.getBooksByIsActivated(isActivated);
+    @GetMapping("")
+    ResponseEntity<List<Book>> getBooksByIsActivated(@RequestParam(required = false) String activated){
+        List<Book> books = bookService.getBooksByIsActivated(activated);
+        if(books.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(books);
     }
 }

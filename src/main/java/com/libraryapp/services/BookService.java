@@ -15,5 +15,5 @@ public interface BookService {
     Book registerBook(Book book);
     Book editBook(Book book);
     boolean removeBookById(int bookId);
-    List<Book> getBooksByIsActivated(boolean isActivated);
+    List<Book> getBooksByIsActivated(String activated);
 }
