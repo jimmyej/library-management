@@ -28,7 +28,13 @@ public class BookServiceImpl implements BookService {
     }
 
     public Book getBookByIsbnCode(String isbnCode) {
-        return bookRepository.findByIsbnCode(isbnCode);
+
+        boolean existsByIsbncode = bookRepository.existsByIsbnCode(isbnCode);
+
+        if (existsByIsbncode) {
+            return bookRepository.findByIsbnCode(isbnCode);
+        }
+        return null;
     }
 
     public List<Book> getBooksByLanguage(String language) {
@@ -39,13 +45,13 @@ public class BookServiceImpl implements BookService {
         boolean isDeleted = false;
         try {
             boolean existsByIsbnCode = bookRepository.existsByIsbnCode(isbnCode);
-            if(existsByIsbnCode){
+            if (existsByIsbnCode) {
                 Book book = bookRepository.findByIsbnCode(isbnCode);
                 book.setActivated(false);
                 bookRepository.save(book);
                 isDeleted = true;
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             e.getCause();
         }
         return isDeleted;
@@ -53,7 +59,7 @@ public class BookServiceImpl implements BookService {
 
     public Book registerBook(Book book) {
         boolean existsByIsbnCode = bookRepository.existsByIsbnCode(book.getIsbnCode());
-        if(!existsByIsbnCode){
+        if (!existsByIsbnCode) {
             return bookRepository.save(book);
         }
         return null;
@@ -61,9 +67,9 @@ public class BookServiceImpl implements BookService {
 
     public Book editBook(Book book) {
         boolean existsById = bookRepository.existsById(book.getBookId());
-        if(existsById){
+        if (existsById) {
             Book existingBook = bookRepository.findById(book.getBookId()).get();
-            if(existingBook.getIsbnCode().equals(book.getIsbnCode())){
+            if (existingBook.getIsbnCode().equals(book.getIsbnCode())) {
                 return bookRepository.save(book);
             }
         }
@@ -74,20 +80,20 @@ public class BookServiceImpl implements BookService {
         boolean isDeleted = false;
         try {
             boolean existById = bookRepository.existsById(bookId);
-            if(existById){
+            if (existById) {
                 Book book = bookRepository.findById(bookId).get();
                 book.setActivated(false);
                 bookRepository.save(book);
                 isDeleted = true;
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             e.getCause();
         }
         return isDeleted;
     }
 
     public List<Book> getBooksByIsActivated(String activated) {
-        if(activated != null){
+        if (activated != null) {
             boolean status = activated.equals(CommonConstants.ACTIVATED.name());
             return bookRepository.findByActivated(status);
         } else {
