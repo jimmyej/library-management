@@ -1,6 +1,7 @@
 package com.libraryapp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.libraryapp.dtos.requests.BookRequest;
 import com.libraryapp.entities.Book;
 import com.libraryapp.repositories.BookRepository;
 import com.libraryapp.services.impls.BookServiceImpl;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(BookController.class)
 @Import(BookServiceImpl.class)
-public class BookControllerTests {
+class BookControllerTests {
 
     @Autowired
     MockMvc mockMvc;
@@ -51,12 +52,12 @@ public class BookControllerTests {
             "Pepito Perez", LocalDate.of(2021, 6, 6), "0987634733", false);
 
     @AfterEach
-    public void setup() {
+    void setup() {
 
     }
 
     @Test
-    public void getBooksByTitle_success() throws Exception {
+    void getBooksByTitle_success() throws Exception {
         List<Book> books = List.of(book1, book2);
         String title = "Testing with Mockito";
         Mockito.when(bookRepository.findByTitle(title)).thenReturn(books);
@@ -71,7 +72,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void getBooksByTitle_noContent() throws Exception {
+    void getBooksByTitle_noContent() throws Exception {
         List<Book> books = List.of();
         String title = "Testing with Mockito";
         Mockito.when(bookRepository.findByTitle(title)).thenReturn(books);
@@ -83,7 +84,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void getBooksByGender_success() throws Exception {
+    void getBooksByGender_success() throws Exception {
         List<Book> books = List.of(book1, book2);
         String gender = "Programming";
         Mockito.when(bookRepository.findByGender(gender)).thenReturn(books);
@@ -98,7 +99,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void getBooksByGender_noContent() throws Exception {
+    void getBooksByGender_noContent() throws Exception {
         List<Book> books = List.of();
         String gender = "Programming";
         Mockito.when(bookRepository.findByGender(gender)).thenReturn(books);
@@ -110,7 +111,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void getBooksByAuthor_success() throws Exception {
+    void getBooksByAuthor_success() throws Exception {
         List<Book> books = List.of(book1, book3);
         String author = "Pepito Perez";
         Mockito.when(bookRepository.findByAuthor(author)).thenReturn(books);
@@ -125,7 +126,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void getBooksByAuthor_noContent() throws Exception {
+    void getBooksByAuthor_noContent() throws Exception {
         List<Book> books = List.of();
         String author = "Pepito Perez";
         Mockito.when(bookRepository.findByAuthor(author)).thenReturn(books);
@@ -137,7 +138,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void getBookByIsbnCode_success() throws Exception {
+    void getBookByIsbnCode_success() throws Exception {
         String isbnCode = "123456789";
         Mockito.when(bookRepository.existsByIsbnCode(isbnCode)).thenReturn(true);
         Mockito.when(bookRepository.findByIsbnCode(isbnCode)).thenReturn(book1);
@@ -151,7 +152,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void getBookByIsbnCode_notFound() throws Exception {
+    void getBookByIsbnCode_notFound() throws Exception {
         String isbnCode = "123456789";
         Mockito.when(bookRepository.findByIsbnCode(isbnCode)).thenReturn(null);
 
@@ -162,7 +163,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void getBooksByLanguage_success() throws Exception {
+    void getBooksByLanguage_success() throws Exception {
         List<Book> books = List.of(book1, book3);
         String language = "ESP";
         Mockito.when(bookRepository.findByLanguage(language)).thenReturn(books);
@@ -177,7 +178,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void getBooksByLanguage_noContent() throws Exception {
+    void getBooksByLanguage_noContent() throws Exception {
         List<Book> books = List.of();
         String language = "Pepito Perez";
         Mockito.when(bookRepository.findByLanguage(language)).thenReturn(books);
@@ -189,7 +190,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void removeBookByIsbnCode_success() throws Exception {
+    void removeBookByIsbnCode_success() throws Exception {
         String isbnCode = "ESP";
 
         Mockito.when(bookRepository.existsByIsbnCode(isbnCode)).thenReturn(true);
@@ -203,7 +204,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void removeBookByIsbnCode_notFound() throws Exception {
+    void removeBookByIsbnCode_notFound() throws Exception {
         String isbnCode = "ESP";
 
         Mockito.when(bookRepository.existsByIsbnCode(isbnCode)).thenReturn(false);
@@ -215,7 +216,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void removeBookByIsbnCode_exception() throws Exception {
+    void removeBookByIsbnCode_exception() throws Exception {
         String isbnCode = "ESP";
 
         Mockito.when(bookRepository.existsByIsbnCode(isbnCode)).thenThrow(new NullPointerException());
@@ -227,7 +228,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void getBooks_success() throws Exception {
+    void getBooks_success() throws Exception {
         List<Book> books = List.of(book1, book2, book3, book4, book5);
 
         Mockito.when(bookRepository.findAll()).thenReturn(books);
@@ -241,7 +242,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void removeBookById_success() throws Exception {
+    void removeBookById_success() throws Exception {
         int bookId = 1;
 
         Mockito.when(bookRepository.existsById(bookId)).thenReturn(true);
@@ -255,7 +256,20 @@ public class BookControllerTests {
     }
 
     @Test
-    public void removeBookById_notFound() throws Exception {
+    void removeBookById_notPresent() throws Exception {
+        int bookId = 1;
+
+        Mockito.when(bookRepository.existsById(bookId)).thenReturn(true);
+        Mockito.when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/v1/books/ids/" + bookId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void removeBookById_notFound() throws Exception {
         int bookId = 1;
 
         Mockito.when(bookRepository.existsById(bookId)).thenReturn(false);
@@ -267,7 +281,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void removeBookById_exception() throws Exception {
+    void removeBookById_exception() throws Exception {
         int id = 1;
 
         Mockito.when(bookRepository.existsById(id)).thenThrow(new NullPointerException());
@@ -279,10 +293,10 @@ public class BookControllerTests {
     }
 
     @Test
-    public void registerBook_success() throws Exception {
+    void registerBook_success() throws Exception {
         String isbnCode = "123456789";
 
-        Book book = new Book();
+        BookRequest book = new BookRequest();
         book.setTitle("Testing with Mockito");
         book.setGender("Programming");
         book.setEditorial("Editorial ABC");
@@ -307,7 +321,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void registerBook_found() throws Exception {
+    void registerBook_found() throws Exception {
         String isbnCode = "123456789";
 
         Mockito.when(bookRepository.existsByIsbnCode(isbnCode)).thenReturn(true);
@@ -321,7 +335,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void editBook_success() throws Exception {
+    void editBook_success() throws Exception {
         int bookId = 1;
 
         Mockito.when(bookRepository.existsById(bookId)).thenReturn(true);
@@ -337,7 +351,22 @@ public class BookControllerTests {
     }
 
     @Test
-    public void editBook_notFound() throws Exception {
+    void editBook_notPresent() throws Exception {
+        int bookId = 1;
+
+        Mockito.when(bookRepository.existsById(bookId)).thenReturn(true);
+        Mockito.when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/v1/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(book1)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void editBook_notFound() throws Exception {
         int bookId = 1;
 
         Mockito.when(bookRepository.existsById(bookId)).thenReturn(false);
@@ -351,7 +380,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void editBook_differentIsbnCode() throws Exception {
+    void editBook_differentIsbnCode() throws Exception {
         int bookId = 1;
 
         Book newBook = new Book(1, "Testing with Mockito", "Programming", "Editorial ABC", (short) 254, "ESP",
@@ -369,7 +398,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void getBooksByIsActivated_success() throws Exception {
+    void getBooksByIsActivated_success() throws Exception {
         List<Book> books = List.of(book1, book2, book3);
 
         Mockito.when(bookRepository.findByActivated(true)).thenReturn(books);
@@ -383,7 +412,7 @@ public class BookControllerTests {
     }
 
     @Test
-    public void getBooks_noContent() throws Exception {
+    void getBooks_noContent() throws Exception {
         List<Book> books = List.of();
         Mockito.when(bookRepository.findAll()).thenReturn(books);
 
