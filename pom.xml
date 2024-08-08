@@ -28,7 +28,21 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>11</java.version>
+
+		<!-- Sonar properties -->
+		<sonar.projectKey>library-management</sonar.projectKey>
+		<sonar.projectName>library-management</sonar.projectName>
+		<sonar.projectVersion>1.0</sonar.projectVersion>
+		<sonar.sources>src/main/java</sonar.sources>
+		<sonar.tests>src/test/java</sonar.tests>
+		<sonar.exclusions>
+			**/LibraryManagementApplication.java,
+			**/entities/**,
+			**/dtos/**,
+			**/enums/**
+		</sonar.exclusions>
+
 	</properties>
 	<dependencies>
 		<dependency>
@@ -58,10 +72,20 @@
 	</dependencies>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>3.9.1.2184</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.3.2</version>
 				<configuration>
 					<excludes>
 						<exclude>
@@ -79,6 +103,8 @@
 					<excludes>
 						<exclude>**/LibraryManagementApplication.class</exclude>
 						<exclude>**/entities/**</exclude>
+						<exclude>**/dtos/**</exclude>
+						<exclude>**/enums/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>

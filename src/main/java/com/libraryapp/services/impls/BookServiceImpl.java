@@ -1,5 +1,6 @@
 package com.libraryapp.services.impls;
 
+import com.libraryapp.dtos.requests.BookRequest;
 import com.libraryapp.entities.Book;
 import com.libraryapp.enums.CommonConstants;
 import com.libraryapp.repositories.BookRepository;
@@ -8,12 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookServiceImpl implements BookService {
 
-    @Autowired
     BookRepository bookRepository;
+
+    @Autowired
+    BookServiceImpl(BookRepository bookRepository){
+        this.bookRepository = bookRepository;
+    }
 
     public List<Book> getBooksByTitle(String title) {
         return bookRepository.findByTitle(title);
@@ -57,21 +63,38 @@ public class BookServiceImpl implements BookService {
         return isDeleted;
     }
 
-    public Book registerBook(Book book) {
+    public Book registerBook(BookRequest book) {
         boolean existsByIsbnCode = bookRepository.existsByIsbnCode(book.getIsbnCode());
         if (!existsByIsbnCode) {
-            return bookRepository.save(book);
+            return bookRepository.save(buildBookRequest(book,0));
         }
         return null;
     }
+    private Book buildBookRequest(BookRequest book, int id){
+        Book newBook = new Book();
+        if(id > 0){
+            newBook.setBookId(id);
+        }
+        newBook.setTitle(book.getTitle());
+        newBook.setGender(book.getGender());
+        newBook.setEditorial(book.getEditorial());
+        newBook.setPages(book.getPages());
+        newBook.setLanguage(book.getLanguage());
+        newBook.setAuthor(book.getAuthor());
+        newBook.setPublishedAt(book.getPublishedAt());
+        newBook.setIsbnCode(book.getIsbnCode());
+        newBook.setActivated(book.isActivated());
+        return newBook;
+    }
 
-    public Book editBook(Book book) {
+    public Book editBook(BookRequest book) {
         boolean existsById = bookRepository.existsById(book.getBookId());
         if (existsById) {
-            Book existingBook = bookRepository.findById(book.getBookId()).get();
-            if (existingBook.getIsbnCode().equals(book.getIsbnCode())) {
-                return bookRepository.save(book);
+            Optional<Book> existingBook = bookRepository.findById(book.getBookId());
+            if (existingBook.isPresent() && existingBook.get().getIsbnCode().equals(book.getIsbnCode())) {
+                return bookRepository.save(buildBookRequest(book, book.getBookId()));
             }
+            return null;
         }
         return null;
     }
@@ -81,10 +104,12 @@ public class BookServiceImpl implements BookService {
         try {
             boolean existById = bookRepository.existsById(bookId);
             if (existById) {
-                Book book = bookRepository.findById(bookId).get();
-                book.setActivated(false);
-                bookRepository.save(book);
-                isDeleted = true;
+                Optional<Book> book = bookRepository.findById(bookId);
+                if(book.isPresent()){
+                    book.get().setActivated(false);
+                    bookRepository.save(book.get());
+                    isDeleted = true;
+                }
             }
         } catch (Exception e) {
             e.getCause();

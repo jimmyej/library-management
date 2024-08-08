@@ -1,5 +1,6 @@
 package com.libraryapp.services;
 
+import com.libraryapp.dtos.requests.BookRequest;
 import com.libraryapp.entities.Book;
 
 import java.util.List;
@@ -12,8 +13,8 @@ public interface BookService {
     List<Book> getBooksByLanguage(String language);
     boolean removeBookByIsbnCode(String isbnCode);
 
-    Book registerBook(Book book);
-    Book editBook(Book book);
+    Book registerBook(BookRequest book);
+    Book editBook(BookRequest book);
     boolean removeBookById(int bookId);
     List<Book> getBooksByIsActivated(String activated);
 }
