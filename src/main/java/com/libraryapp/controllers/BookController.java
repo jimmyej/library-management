@@ -3,7 +3,6 @@ package com.libraryapp.controllers;
 import com.libraryapp.dtos.requests.BookRequest;
 import com.libraryapp.entities.Book;
 import com.libraryapp.services.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,6 @@ public class BookController {
 
     BookService bookService;
 
-    @Autowired
     BookController(BookService bookService) {
         this.bookService = bookService;
     }
@@ -85,8 +83,7 @@ public class BookController {
     }
 
     @PutMapping("")
-    @ResponseBody
-    ResponseEntity<Book> editBook(@RequestBody Book book) {
+    ResponseEntity<Book> editBook(@RequestBody BookRequest book) {
         Book newBook = bookService.editBook(book);
         if (newBook == null) {
             return ResponseEntity.notFound().build();
