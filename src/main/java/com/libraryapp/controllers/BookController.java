@@ -17,92 +17,90 @@ public class BookController {
     BookService bookService;
 
     @GetMapping("/titles/{title}")
-    ResponseEntity<List<Book>> getBooksByTitle(@PathVariable String title){
+    ResponseEntity<List<Book>> getBooksByTitle(@PathVariable String title) {
         List<Book> books = bookService.getBooksByTitle(title);
-        if(books.isEmpty()){
+        if (books.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(books);
     }
 
     @GetMapping("/genders/{gender}")
-    ResponseEntity<List<Book>> getBooksByGender(@PathVariable String gender){
-        List<Book> books =  bookService.getBooksByGender(gender);
-        if(books.isEmpty()){
+    ResponseEntity<List<Book>> getBooksByGender(@PathVariable String gender) {
+        List<Book> books = bookService.getBooksByGender(gender);
+        if (books.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(books);
     }
 
     @GetMapping("/authors/{author}")
-    ResponseEntity<List<Book>> getBooksByAuthor(@PathVariable String author){
+    ResponseEntity<List<Book>> getBooksByAuthor(@PathVariable String author) {
         List<Book> books = bookService.getBooksByAuthor(author);
-        if(books.isEmpty()){
+        if (books.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(books);
     }
 
     @GetMapping("/codes/{isbnCode}")
-    ResponseEntity<Book> getBookByIsbnCode(@PathVariable String isbnCode){
+    ResponseEntity<Book> getBookByIsbnCode(@PathVariable String isbnCode) {
         Book book = bookService.getBookByIsbnCode(isbnCode);
-        if(book == null){
+        if (book == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(book);
     }
 
     @GetMapping("/languages/{language}")
-    ResponseEntity<List<Book>> getBooksByLanguage(@PathVariable String language){
+    ResponseEntity<List<Book>> getBooksByLanguage(@PathVariable String language) {
         List<Book> books = bookService.getBooksByLanguage(language);
-        if(books.isEmpty()){
+        if (books.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(books);
     }
 
     @DeleteMapping("/codes/{isbnCode}")
-    ResponseEntity<Boolean> removeBookByIsbnCode(@PathVariable String isbnCode){
+    ResponseEntity<Boolean> removeBookByIsbnCode(@PathVariable String isbnCode) {
         boolean removed = bookService.removeBookByIsbnCode(isbnCode);
-        if(!removed){
+        if (!removed) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("")
-    @ResponseBody
-    ResponseEntity<Book> registerBook(@RequestBody Book book){
+    ResponseEntity<Book> registerBook(@RequestBody Book book) {
         Book newBook = bookService.registerBook(book);
-        if(newBook != null){
+        if (newBook != null) {
             return new ResponseEntity<>(newBook, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.FOUND);
     }
 
     @PutMapping("")
-    @ResponseBody
-    ResponseEntity<Book> editBook(@RequestBody Book book){
+    ResponseEntity<Book> editBook(@RequestBody Book book) {
         Book newBook = bookService.editBook(book);
-        if(newBook == null){
+        if (newBook == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(newBook);
     }
 
     @DeleteMapping("/ids/{bookId}")
-    ResponseEntity<Boolean> removeBookById(@PathVariable int bookId){
+    ResponseEntity<Boolean> removeBookById(@PathVariable int bookId) {
         boolean removed = bookService.removeBookById(bookId);
-        if(!removed){
+        if (!removed) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("")
-    ResponseEntity<List<Book>> getBooksByIsActivated(@RequestParam(required = false) String activated){
+    ResponseEntity<List<Book>> getBooksByIsActivated(@RequestParam(required = false) String activated) {
         List<Book> books = bookService.getBooksByIsActivated(activated);
-        if(books.isEmpty()){
+        if (books.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(books);
