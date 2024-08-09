@@ -14,7 +14,6 @@ public interface BookRepository extends CrudRepository<Book, Integer> {
     List<Book> findByAuthor(String author);
     Book findByIsbnCode(String isbnCode);
     List<Book> findByLanguage(String language);
-    void deleteByIsbnCode(String isbnCode);
     List<Book> findByActivated(boolean isActivated);
     boolean existsByIsbnCode(String isbnCode);
 }
