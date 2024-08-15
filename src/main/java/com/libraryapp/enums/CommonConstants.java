@@ -2,5 +2,8 @@ package com.libraryapp.enums;
 
 public enum CommonConstants {
     ACTIVATED,
-    INACTIVATED
+    INACTIVATED,
+    RESERVED,
+    LOANED,
+    FINISHED
 }
