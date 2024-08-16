@@ -1,0 +1,15 @@
+   // public People editPeople(PeopleRequest people) {
+    // // Obtiene el registro existente
+    // Optional<People> existingPeople =
+    // peopleRepository.findById(people.getPeopleId());
+
+    // if (existingPeople.isPresent()) {
+    // // Construye el objeto People con los datos actualizados
+    // People updatedPeople = buildPeopleRequest(people, people.getPeopleId());
+    // // Guarda el registro actualizado y lo retorna
+    // return peopleRepository.save(updatedPeople);
+    // }
+
+    // // Retorna null si el registro no existe
+    // return null;
+    // }

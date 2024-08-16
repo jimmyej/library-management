@@ -46,6 +46,7 @@ public class BookServiceImpl implements BookService {
     }
 
     public boolean removeBookByIsbnCode(String isbnCode) {
+
         boolean isDeleted = false;
         try {
             boolean existsByIsbnCode = bookRepository.existsByIsbnCode(isbnCode);
