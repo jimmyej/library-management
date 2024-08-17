@@ -7,7 +7,7 @@ import com.libraryapp.entities.Permission;
 
 public interface PermissionService {
 
-    List<Permission> getPermissionsByName(String permissionName);
+    Permission getPermissionByName(String permissionName);
 
     Permission registerPermission(PermissionRequest permission);
 

@@ -7,7 +7,7 @@ import com.libraryapp.entities.Role;
 
 public interface RoleService {
 
-    List<Role> getRolesName(String roleName);
+    Role getRoleByRoleName(String roleName);
 
     Role registerRole(RoleRequest role);
 

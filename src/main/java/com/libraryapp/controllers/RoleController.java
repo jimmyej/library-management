@@ -1,7 +1,5 @@
 package com.libraryapp.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +16,7 @@ import com.libraryapp.dtos.requests.RoleRequest;
 import com.libraryapp.entities.Role;
 import com.libraryapp.services.RoleService;
 
+@SuppressWarnings("unused")
 @RestController
 @RequestMapping("/api/v1/roles")
 public class RoleController {
@@ -30,10 +29,10 @@ public class RoleController {
     }
 
     @GetMapping("/roleName/{roleName}")
-    ResponseEntity<List<Role>> getRolesName(@PathVariable String roleName) {
+    ResponseEntity<Role> getRoleByRoleName(@PathVariable String roleName) {
 
-        List<Role> roles = roleService.getRolesName(roleName);
-        if (roles.isEmpty()) {
+        Role roles = roleService.getRoleByRoleName(roleName);
+        if (roles == null) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(roles);
@@ -60,10 +59,10 @@ public class RoleController {
         return ResponseEntity.ok(newRole);
     }
 
-    @DeleteMapping("/ids/{idRole}")
-    ResponseEntity<Boolean> removeRoleById(int idRole) {
+    @DeleteMapping("/ids/{roleId}")
+    ResponseEntity<Boolean> removeRoleById(@PathVariable int roleId) {
 
-        boolean removed = roleService.removeRoleById(idRole);
+        boolean removed = roleService.removeRoleById(roleId);
         if (!removed) {
             return ResponseEntity.notFound().build();
 

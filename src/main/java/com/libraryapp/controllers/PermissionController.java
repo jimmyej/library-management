@@ -2,6 +2,7 @@ package com.libraryapp.controllers;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,23 +18,25 @@ import com.libraryapp.dtos.requests.PermissionRequest;
 import com.libraryapp.entities.Permission;
 import com.libraryapp.services.PermissionService;
 
+@SuppressWarnings("unused")
 @RestController
 @RequestMapping("/api/v1/permissions")
 public class PermissionController {
 
     PermissionService permissionService;
 
+    @Autowired
     PermissionController(PermissionService permissionService) {
         this.permissionService = permissionService;
     }
 
     @GetMapping("/permissionNames/{permissionName}")
-    ResponseEntity<List<Permission>> getPermissionsByName(@PathVariable String permissionName) {
-        List<Permission> permissions = permissionService.getPermissionsByName(permissionName);
-        if (permissions.isEmpty()) {
+    ResponseEntity<Permission> getPermissionByName(@PathVariable String permissionName) {
+        Permission permission = permissionService.getPermissionByName(permissionName);
+        if (permission == null) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(permissions);
+        return ResponseEntity.ok(permission);
     }
 
     @PostMapping("")
@@ -57,9 +60,9 @@ public class PermissionController {
         return ResponseEntity.ok(newPermission);
     }
 
-    @DeleteMapping("/ids/{idPermission}")
-    ResponseEntity<Boolean> removePermissionById(@PathVariable int idPermission) {
-        boolean removed = permissionService.removePermissionById(idPermission);
+    @DeleteMapping("/ids/{permissionId}")
+    ResponseEntity<Boolean> removePermissionById(@PathVariable int permissionId) {
+        boolean removed = permissionService.removePermissionById(permissionId);
         if (!removed) {
             return ResponseEntity.notFound().build();
 
@@ -74,7 +77,7 @@ public class PermissionController {
             return ResponseEntity.noContent().build();
 
         }
-        return ResponseEntity.ok(permissions),
+        return ResponseEntity.ok(permissions);
     }
 
 }

@@ -10,8 +10,8 @@ import com.libraryapp.entities.RolePermission;
 @Repository
 public interface RolePermissionRepository extends CrudRepository<RolePermission, Integer> {
 
-    List<RolePermission> findByIdRole(int idRole);
+    List<RolePermission> findByRoleId(int roleId);
 
-    List<RolePermission> findByIdPermission(int idPermission);
+    List<RolePermission> findByPermissionId(int permissionId);
 
 }

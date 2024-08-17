@@ -13,7 +13,7 @@ public class PermissionRequest {
 
     private String permissionName;
 
-    private String descripcion;
+    private String description;
 
     private Boolean activated;
 

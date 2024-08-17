@@ -10,7 +10,7 @@ import lombok.Setter;
 public class RolePermissionRequest {
 
     private int id;
-    private int idRole;
-    private int idPermission;
+    private int roleId;
+    private int permissionId;
 
 }

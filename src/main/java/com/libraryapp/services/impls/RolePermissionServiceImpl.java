@@ -3,6 +3,7 @@ package com.libraryapp.services.impls;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.libraryapp.dtos.requests.RolePermissionRequest;
@@ -10,27 +11,25 @@ import com.libraryapp.entities.RolePermission;
 import com.libraryapp.repositories.RolePermissionRepository;
 import com.libraryapp.services.RolePermissionService;
 
+@SuppressWarnings("unused")
 @Service
 public class RolePermissionServiceImpl implements RolePermissionService {
 
     RolePermissionRepository rolePermissionRepository;
 
+    @Autowired
     RolePermissionServiceImpl(RolePermissionRepository rolePermissionRepository) {
         this.rolePermissionRepository = rolePermissionRepository;
     }
 
-    @Override
     public List<RolePermission> getRolePermissionByPermissionId(int permissionId) {
-
         return rolePermissionRepository.findByPermissionId(permissionId);
     }
 
-    @Override
     public List<RolePermission> getRolePermissionByRoleId(int roleId) {
         return rolePermissionRepository.findByRoleId(roleId);
     }
 
-    @Override
     public RolePermission editRolePermission(RolePermissionRequest rolePermission) {
         boolean existsById = rolePermissionRepository.existsById(rolePermission.getId());
         if (existsById) {
@@ -44,14 +43,12 @@ public class RolePermissionServiceImpl implements RolePermissionService {
         return null;
     }
 
-    @Override
     public RolePermission registerRolePermission(RolePermissionRequest rolePermission) {
 
         return rolePermissionRepository.save(buildRolePermissionRequest(rolePermission, 0));
 
     }
 
-    @Override
     public boolean removeRolePermissionById(int rolePermissionId) {
         boolean isDeleted = false;
         try {
@@ -63,8 +60,8 @@ public class RolePermissionServiceImpl implements RolePermissionService {
                     isDeleted = true;
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.getMessage();
         }
         return isDeleted;
     }
@@ -75,8 +72,8 @@ public class RolePermissionServiceImpl implements RolePermissionService {
             newRolePermission.setId(id);
         }
 
-        newRolePermission.setIdRole(rolePermissionRequest.getIdRole());
-        newRolePermission.setIdPermission(rolePermissionRequest.getIdPermission());
+        newRolePermission.setRoleId(rolePermissionRequest.getRoleId());
+        newRolePermission.setPermissionId(rolePermissionRequest.getPermissionId());
 
         return newRolePermission;
     }

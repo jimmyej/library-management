@@ -22,13 +22,13 @@ public class Permission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Id;
+    private int permissionId;
 
-    @Column(name = "permission_name")
+    @Column(name = "permission_name", length = 25, unique = true)
     private String permissionName;
 
     @Column(length = 100)
-    private String descripcion;
+    private String description;
 
     @Column(name = "is_activated")
     private Boolean activated;

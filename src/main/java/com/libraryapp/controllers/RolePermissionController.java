@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +18,7 @@ import com.libraryapp.dtos.requests.RolePermissionRequest;
 import com.libraryapp.entities.RolePermission;
 import com.libraryapp.services.RolePermissionService;
 
+@SuppressWarnings("unused")
 @RestController
 @RequestMapping("/api/v1/rolesPermissions")
 public class RolePermissionController {
@@ -30,7 +30,7 @@ public class RolePermissionController {
         this.rolePermissionService = rolePermissionService;
     }
 
-    @GetMapping("/idRoles/{idRole}")
+    @GetMapping("/idRoles/{roleId}")
     ResponseEntity<List<RolePermission>> getRolePermissionByRoleId(@PathVariable int roleId) {
         List<RolePermission> rolePermissions = rolePermissionService.getRolePermissionByPermissionId(roleId);
         if (rolePermissions.isEmpty()) {
@@ -39,7 +39,7 @@ public class RolePermissionController {
         return ResponseEntity.ok(rolePermissions);
     }
 
-    @GetMapping("/idPermissions/{idPermission}")
+    @GetMapping("/idPermissions/{permissionId}")
     ResponseEntity<List<RolePermission>> getRolePermissionByPermissionId(@PathVariable int permissionId) {
         List<RolePermission> rolePermissions = rolePermissionService.getRolePermissionByPermissionId(permissionId);
         if (rolePermissions.isEmpty()) {
@@ -55,7 +55,7 @@ public class RolePermissionController {
             return new ResponseEntity<>(newRolePermission,HttpStatus.CREATED);
             
         }
-        return new ResponseEntity<>(HttpStatus.FOUND)
+        return new ResponseEntity<>(HttpStatus.FOUND);
     }
 
     @PutMapping("")
@@ -67,13 +67,13 @@ public class RolePermissionController {
         return ResponseEntity.ok(newRolePermission);
     }
 
-@DeleteMapping("/ids/{rolePermission}")
-    ResponseEntity<boolean> removeRolePermissionById(@PathVariableint int rolePermissionId){
-boolean removed = rolePermissionService.removeRolePermissionById(rolePermissionId);
-if (!removed) {
-    return ResponseEntity.notFound().build();
-}
-return ResponseEntity.noContent().build();
+    @DeleteMapping("/ids/{rolePermissionId}")
+    ResponseEntity<Boolean> removeRolePermissionById(@PathVariable int rolePermissionId){
+    boolean removed = rolePermissionService.removeRolePermissionById(rolePermissionId);
+        if (!removed) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.noContent().build();
     }
 
 }

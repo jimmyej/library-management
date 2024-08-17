@@ -12,6 +12,7 @@ import com.libraryapp.enums.CommonConstants;
 import com.libraryapp.repositories.RoleRepository;
 import com.libraryapp.services.RoleService;
 
+@SuppressWarnings("unused")
 @Service
 public class RoleServiceImpl implements RoleService {
 
@@ -22,13 +23,11 @@ public class RoleServiceImpl implements RoleService {
         this.roleRepository = roleRepository;
     }
 
-    @Override
-    public List<Role> getRolesName(String roleName) {
-
-        return roleRepository.findByRoleName(roleName);
+    public Role getRoleByRoleName(String roleName) {
+        Optional<Role> role = roleRepository.findByRoleName(roleName);
+        return role.orElse(null);
     }
 
-    @Override
     public Role registerRole(RoleRequest role) {
         boolean existByRoleName = roleRepository.existsByRoleName(role.getRoleName());
         if (!existByRoleName) {
@@ -40,30 +39,26 @@ public class RoleServiceImpl implements RoleService {
     private Role buildRoleRequest(RoleRequest roleRequest, int id) {
         Role newRole = new Role();
         if (id > 0) {
-            newRole.setId(id);
+            newRole.setRoleId(id);
         }
         newRole.setRoleName(roleRequest.getRoleName());
         newRole.setActivated(roleRequest.getActivated());
         return newRole;
     }
 
-    @Override
     public Role editRole(RoleRequest role) {
 
         boolean existById = roleRepository.existsById(role.getRoleId());
         if (existById) {
             return roleRepository.save(buildRoleRequest(role, role.getRoleId()));
         }
-
         return null;
     }
 
-    @Override
     public Boolean removeRoleById(int roleId) {
         boolean isDeleted = false;
 
         try {
-
             boolean existsById = roleRepository.existsById(roleId);
             if (existsById) {
                 Optional<Role> role = roleRepository.findById(roleId);
@@ -73,25 +68,21 @@ public class RoleServiceImpl implements RoleService {
                     isDeleted = true;
                 }
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.getMessage();
         }
 
         return isDeleted;
     }
 
-    @Override
     public List<Role> getRolesByIsActivated(String activated) {
 
         if (activated != null) {
             boolean status = activated.equals(CommonConstants.ACTIVATED.name());
             return roleRepository.findByActivated(status);
-
         } else {
             return (List<Role>) roleRepository.findAll();
         }
-
     }
 
 }

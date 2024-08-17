@@ -12,6 +12,7 @@ import com.libraryapp.enums.CommonConstants;
 import com.libraryapp.repositories.PermissionRepository;
 import com.libraryapp.services.PermissionService;
 
+@SuppressWarnings("unused")
 @Service
 public class PermissionServiceImpl implements PermissionService {
 
@@ -22,13 +23,11 @@ public class PermissionServiceImpl implements PermissionService {
         this.permissionRepository = permissionRepository;
     }
 
-    @Override
-    public List<Permission> getPermissionsByName(String permissionName) {
-
-        return permissionRepository.findByPermissionName(permissionName);
+    public Permission getPermissionByName(String permissionName) {
+        Optional<Permission> permission = permissionRepository.findByPermissionName(permissionName);
+        return permission.orElse(null);
     }
 
-    @Override
     public Permission editPermission(PermissionRequest permission) {
 
         boolean existsById = permissionRepository.existsById(permission.getPermissionId());
@@ -42,9 +41,7 @@ public class PermissionServiceImpl implements PermissionService {
         return null;
     }
 
-    @Override
     public Permission registerPermission(PermissionRequest permission) {
-
         boolean existsByName = permissionRepository.existsByPermissionName(permission.getPermissionName());
         if (!existsByName) {
             return permissionRepository.save(buildPermissionRequest(permission, 0));
@@ -52,7 +49,6 @@ public class PermissionServiceImpl implements PermissionService {
         return null;
     }
 
-    @Override
     public Boolean removePermissionById(int permissionId) {
 
         boolean isDeleted = false;
@@ -72,7 +68,6 @@ public class PermissionServiceImpl implements PermissionService {
         return isDeleted;
     }
 
-    @Override
     public List<Permission> getPermissionsByIsActivated(String activated) {
         if (activated != null) {
             boolean status = activated.equals(CommonConstants.ACTIVATED.name());
@@ -85,10 +80,10 @@ public class PermissionServiceImpl implements PermissionService {
     private Permission buildPermissionRequest(PermissionRequest permission, int id) {
         Permission newPermission = new Permission();
         if (id > 0) {
-            newPermission.setId(id);
+            newPermission.setPermissionId(id);
         }
         newPermission.setPermissionName(permission.getPermissionName());
-        newPermission.setDescripcion(permission.getDescripcion());
+        newPermission.setDescription(permission.getDescription());
         newPermission.setActivated(permission.getActivated());
         return newPermission;
     }

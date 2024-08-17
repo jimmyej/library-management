@@ -22,9 +22,9 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Id;
+    private int roleId;
 
-    @Column(name = "role_name")
+    @Column(name = "role_name", unique = true)
     private String roleName;
 
     @Column(name = "is_activated")
