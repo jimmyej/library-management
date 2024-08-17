@@ -3,6 +3,7 @@ package com.libraryapp.services.impls;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.libraryapp.dtos.requests.LoanRequest;
@@ -15,6 +16,8 @@ import com.libraryapp.services.LoanService;
 public class LoanServiceImpl implements LoanService{
 
     LoanRepository loanRepository;
+
+    @Autowired
     LoanServiceImpl(LoanRepository loanRepository){
         this.loanRepository = loanRepository;
     }
@@ -64,7 +67,7 @@ public class LoanServiceImpl implements LoanService{
                     isDeleted = true;
                 }
             }
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             e.getCause();
         }
         return isDeleted;

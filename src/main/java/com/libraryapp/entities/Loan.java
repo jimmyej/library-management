@@ -1,6 +1,7 @@
 package com.libraryapp.entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
@@ -26,9 +27,9 @@ public class Loan {
     @Column(name = "employee_name", length = 100)
     private String employeeName;
     @Column(name = "loan_date")
-    private LocalDate loanDate;
+    private LocalDateTime loanDate;
     @Column(name = "return_date")
-    private LocalDate returnDate;
+    private LocalDateTime returnDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "loan_status", length = 50)
