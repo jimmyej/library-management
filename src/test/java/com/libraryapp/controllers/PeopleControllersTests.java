@@ -6,11 +6,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +24,18 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.libraryapp.dtos.requests.PersonRequest;
 import com.libraryapp.entities.Person;
-import com.libraryapp.repositories.PeopleRepository;
-import com.libraryapp.services.impls.PeopleServiceImpl;
+import com.libraryapp.repositories.PersonRepository;
+import com.libraryapp.services.impls.PersonServiceImpl;
 
-@WebMvcTest(PeopleController.class)
-@Import(PeopleServiceImpl.class)
+@WebMvcTest(PersonController.class)
+@Import(PersonServiceImpl.class)
 class PeopleControllersTests {
 
         @Autowired
         MockMvc mockMvc;
 
         @MockBean
-        PeopleRepository peopleRepository;
+        PersonRepository personRepository;
 
         @Autowired
         ObjectMapper mapper;
@@ -47,10 +47,10 @@ class PeopleControllersTests {
                         "123 Main Street",
                         "juan.perez@example.com",
                         "+1234567890",
-                        LocalDate.of(2024, 8, 12),
-                        LocalDate.of(2024, 8, 12),
-                        LocalDate.of(2024, 8, 12),
-                        LocalDate.of(2024, 8, 12),
+                        LocalDateTime.of(2024, 8, 12, 8, 30,50),
+                        "ADMIN-BOT",
+                        LocalDateTime.of(2024, 8, 12, 8, 30,50),
+                        "SUPERVISOR-BOT",
                         true);
 
         Person person2 = new Person(
@@ -60,10 +60,10 @@ class PeopleControllersTests {
                         "456 Elm Street",
                         "maria.gonzalez@example.com",
                         "+0987654321",
-                        LocalDate.of(2024, 8, 12),
-                        LocalDate.of(2024, 8, 12),
-                        LocalDate.of(2024, 8, 12),
-                        LocalDate.of(2024, 8, 12),
+                        LocalDateTime.of(2024, 8, 12, 8, 30,50),
+                "ADMIN-BOT",
+                        LocalDateTime.of(2024, 8, 12, 8, 30,50),
+                "SUPERVISOR-BOT",
                         false);
 
         Person person3 = new Person(
@@ -73,38 +73,20 @@ class PeopleControllersTests {
                         "789 Pine Street",
                         "carlos.fernandez@example.com",
                         "+1122334455",
-                        LocalDate.of(2024, 8, 12),
-                        LocalDate.of(2024, 8, 12),
-                        LocalDate.of(2024, 8, 12),
-                        LocalDate.of(2024, 8, 12),
+                        LocalDateTime.of(2024, 8, 12, 8, 30,50),
+                "ADMIN-BOT",
+                        LocalDateTime.of(2024, 8, 12, 8, 30,50),
+                "SUPERVISOR-BOT",
                         true);
-
-        Person person4 = new Person(
-                        4, "Laura", "Martinez",
-                        LocalDate.of(1995, 2, 28),
-                        "DNI", "45678901",
-                        "101 Maple Street",
-                        "laura.martinez@example.com",
-                        "+2233445566",
-                        LocalDate.of(2024, 8, 12),
-                        LocalDate.of(2024, 8, 12),
-                        LocalDate.of(2024, 8, 12),
-                        LocalDate.of(2024, 8, 12),
-                        false);
-
-        @AfterEach
-        void setup() {
-
-        }
 
         @Test
         void getPeopleByDocNumber_success() throws Exception {
                 String docNumber = "12345678";
-                Mockito.when(peopleRepository.existsByDocNumber(docNumber)).thenReturn(true);
-                Mockito.when(peopleRepository.findByDocNumber(docNumber)).thenReturn(person1);
+                Mockito.when(personRepository.existsByDocNumber(docNumber)).thenReturn(true);
+                Mockito.when(personRepository.findByDocNumber(docNumber)).thenReturn(person1);
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .get("/api/v1/peoples/docNumber/" + docNumber)
+                                .get("/api/v1/people/docNumber/" + docNumber)
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$", notNullValue()))
@@ -115,10 +97,10 @@ class PeopleControllersTests {
         void getPeopleByDocNumber_notFound() throws Exception {
 
                 String docNumber = "12345678";
-                Mockito.when(peopleRepository.findByDocNumber(docNumber)).thenReturn(null);
+                Mockito.when(personRepository.findByDocNumber(docNumber)).thenReturn(null);
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .get("/api/v1/peoples/docNumber/" + docNumber)
+                                .get("/api/v1/people/docNumber/" + docNumber)
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isNotFound());
         }
@@ -127,10 +109,10 @@ class PeopleControllersTests {
         void getPeopleByDocType_success() throws Exception {
                 List<Person> peoples = List.of(person1, person3);
                 String docType = "DNI";
-                Mockito.when(peopleRepository.findByDocType(docType)).thenReturn(peoples);
+                Mockito.when(personRepository.findByDocType(docType)).thenReturn(peoples);
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .get("/api/v1/peoples/docTypes/" + docType)
+                                .get("/api/v1/people/docTypes/" + docType)
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$", notNullValue()))
@@ -143,10 +125,10 @@ class PeopleControllersTests {
 
                 List<Person> peoples = List.of();
                 String docType = "DNI";
-                Mockito.when(peopleRepository.findByDocType(docType)).thenReturn(peoples);
+                Mockito.when(personRepository.findByDocType(docType)).thenReturn(peoples);
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .get("/api/v1/peoples/docTypes/" + docType)
+                                .get("/api/v1/people/docTypes/" + docType)
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isNoContent());
         }
@@ -156,10 +138,10 @@ class PeopleControllersTests {
 
                 List<Person> peoples = List.of(person1, person2, person3);
 
-                Mockito.when(peopleRepository.findByActivated(true)).thenReturn(peoples);
+                Mockito.when(personRepository.findByActivated(true)).thenReturn(peoples);
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .get("/api/v1/peoples?activated=ACTIVATED")
+                                .get("/api/v1/people?activated=ACTIVATED")
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$", notNullValue()))
@@ -170,18 +152,15 @@ class PeopleControllersTests {
         void getPeoples_noContact() throws Exception {
 
                 List<Person> peoples = List.of();
-                Mockito.when(peopleRepository.findAll()).thenReturn(peoples);
+                Mockito.when(personRepository.findAll()).thenReturn(peoples);
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .get("/api/v1/peoples")
+                                .get("/api/v1/people")
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isNoContent());
         }
 
-        @Test
-        void registerPeople_success() throws Exception {
-                String docNumber = "12345678";
-
+        private PersonRequest buildPersonRequest(){
                 PersonRequest person = new PersonRequest();
                 person.setFirstName("Juan");
                 person.setLastName("Pérez");
@@ -191,17 +170,25 @@ class PeopleControllersTests {
                 person.setAddress("123 Main Street");
                 person.setEmail("juan.perez@example.com");
                 person.setPhoneNumber("+1234567890");
-                person.setCreatedAt(LocalDate.of(2024, 8, 12));
-                person.setCreatedBy(LocalDate.of(2024, 8, 12));
-                person.setUpdatedAt(LocalDate.of(2024, 8, 12));
-                person.setUpdatedBy(LocalDate.of(2024, 8, 12));
+                person.setCreatedAt(LocalDateTime.of(2024, 8, 12, 8, 30,50));
+                person.setCreatedBy("ADMIN-BOT");
+                person.setUpdatedAt(LocalDateTime.of(2024, 8, 12, 8, 30,50));
+                person.setUpdatedBy("SUPERVISOR-BOT");
                 person.setActivated(true);
+                return person;
+        }
 
-                Mockito.when(peopleRepository.existsByDocNumber(docNumber)).thenReturn(false);
-                Mockito.when(peopleRepository.save(any())).thenReturn(person1);
+        @Test
+        void registerPeople_success() throws Exception {
+                String docNumber = "12345678";
+
+                PersonRequest person = buildPersonRequest();
+
+                        Mockito.when(personRepository.existsByDocNumber(docNumber)).thenReturn(false);
+                Mockito.when(personRepository.save(any())).thenReturn(person1);
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .post("/api/v1/peoples")
+                                .post("/api/v1/people")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(mapper.writeValueAsString(person)))
@@ -215,10 +202,10 @@ class PeopleControllersTests {
         void registerPeople_found() throws Exception {
                 String docNumber = "12345678";
 
-                Mockito.when(peopleRepository.existsByDocNumber(docNumber)).thenReturn(true);
+                Mockito.when(personRepository.existsByDocNumber(docNumber)).thenReturn(true);
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .post("/api/v1/peoples")
+                                .post("/api/v1/people")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(mapper.writeValueAsString(person1)))
@@ -229,11 +216,11 @@ class PeopleControllersTests {
         void editPeople_success() throws Exception {
                 int personId = 1;
 
-                Mockito.when(peopleRepository.existsById(personId)).thenReturn(true);
-                Mockito.when(peopleRepository.findById(personId)).thenReturn(Optional.of(person1));
-                Mockito.when(peopleRepository.save(any())).thenReturn(person1);
+                Mockito.when(personRepository.existsById(personId)).thenReturn(true);
+                Mockito.when(personRepository.findById(personId)).thenReturn(Optional.of(person1));
+                Mockito.when(personRepository.save(any())).thenReturn(person1);
 
-                mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/peoples")
+                mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/people")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(mapper.writeValueAsString(person1))).andExpect(status().isOk());
@@ -243,10 +230,10 @@ class PeopleControllersTests {
         void editPeople_notPresent() throws Exception {
 
                 int personId = 1;
-                Mockito.when(peopleRepository.existsById(personId)).thenReturn(true);
-                Mockito.when(peopleRepository.findById(personId)).thenReturn(Optional.empty());
+                Mockito.when(personRepository.existsById(personId)).thenReturn(true);
+                Mockito.when(personRepository.findById(personId)).thenReturn(Optional.empty());
 
-                mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/peoples")
+                mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/people")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(mapper.writeValueAsString(person1))).andExpect(status().isNotFound());
@@ -256,10 +243,10 @@ class PeopleControllersTests {
         void editPeople_notFound() throws Exception {
                 int personId = 1;
 
-                Mockito.when(peopleRepository.existsById(personId)).thenReturn(false);
+                Mockito.when(personRepository.existsById(personId)).thenReturn(false);
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .put("/api/v1/peoples")
+                                .put("/api/v1/people")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(mapper.writeValueAsString(person1))).andExpect(status().isNotFound());
@@ -270,12 +257,12 @@ class PeopleControllersTests {
         void removePeopleById_success() throws Exception {
                 int personId = 1;
 
-                Mockito.when(peopleRepository.existsById(personId)).thenReturn(true);
-                Mockito.when(peopleRepository.findById(personId)).thenReturn(Optional.of(person1));
-                Mockito.when(peopleRepository.save(person1)).thenReturn(person1);
+                Mockito.when(personRepository.existsById(personId)).thenReturn(true);
+                Mockito.when(personRepository.findById(personId)).thenReturn(Optional.of(person1));
+                Mockito.when(personRepository.save(person1)).thenReturn(person1);
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .delete("/api/v1/peoples/ids/" + personId)
+                                .delete("/api/v1/people/ids/" + personId)
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isNoContent());
 
@@ -285,11 +272,11 @@ class PeopleControllersTests {
         void removePeopleById_notPresent() throws Exception {
                 int personId = 1;
 
-                Mockito.when(peopleRepository.existsById(personId)).thenReturn(true);
-                Mockito.when(peopleRepository.findById(personId)).thenReturn(Optional.empty());
+                Mockito.when(personRepository.existsById(personId)).thenReturn(true);
+                Mockito.when(personRepository.findById(personId)).thenReturn(Optional.empty());
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .delete("/api/v1/peoples/ids/" + personId)
+                                .delete("/api/v1/people/ids/" + personId)
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isNotFound());
         }
@@ -298,10 +285,10 @@ class PeopleControllersTests {
         void removePeopleById_notFound() throws Exception {
                 int personId = 1;
 
-                Mockito.when(peopleRepository.existsById(personId)).thenReturn(false);
+                Mockito.when(personRepository.existsById(personId)).thenReturn(false);
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .delete("/api/v1/peoples/ids/" + personId)
+                                .delete("/api/v1/people/ids/" + personId)
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isNotFound());
         }
@@ -310,10 +297,10 @@ class PeopleControllersTests {
         void removePeopleById_exception() throws Exception {
                 int personId = 1;
 
-                Mockito.when(peopleRepository.existsById(personId)).thenThrow(new NullPointerException());
+                Mockito.when(personRepository.existsById(personId)).thenThrow(new NullPointerException());
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .delete("/api/v1/peoples/ids/" + personId)
+                                .delete("/api/v1/people/ids/" + personId)
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isNotFound());
         }
@@ -322,12 +309,12 @@ class PeopleControllersTests {
         void removePeopleByDocNumber_success() throws Exception {
                 String peopleDocNumber = "12345678";
 
-                Mockito.when(peopleRepository.existsByDocNumber(peopleDocNumber)).thenReturn(true);
-                Mockito.when(peopleRepository.findByDocNumber(peopleDocNumber)).thenReturn(person1);
-                Mockito.when(peopleRepository.save(person1)).thenReturn(person1);
+                Mockito.when(personRepository.existsByDocNumber(peopleDocNumber)).thenReturn(true);
+                Mockito.when(personRepository.findByDocNumber(peopleDocNumber)).thenReturn(person1);
+                Mockito.when(personRepository.save(person1)).thenReturn(person1);
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .delete("/api/v1/peoples/docNumbers/" + peopleDocNumber)
+                                .delete("/api/v1/people/docNumbers/" + peopleDocNumber)
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isNoContent());
         }
@@ -336,10 +323,10 @@ class PeopleControllersTests {
         void removePeopleByDocNumber_notFound() throws Exception {
                 String peopleDocNumber = "12345678";
 
-                Mockito.when(peopleRepository.existsByDocNumber(peopleDocNumber)).thenReturn(false);
+                Mockito.when(personRepository.existsByDocNumber(peopleDocNumber)).thenReturn(false);
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .delete("/api/v1/peoples/docNumbers/" + peopleDocNumber)
+                                .delete("/api/v1/people/docNumbers/" + peopleDocNumber)
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isNotFound());
         }
@@ -348,10 +335,10 @@ class PeopleControllersTests {
         void removePeopleByDocNumber_exception() throws Exception {
                 String peopleDocNumber = "12345678";
 
-                Mockito.when(peopleRepository.existsByDocNumber(peopleDocNumber)).thenThrow(new NullPointerException());
+                Mockito.when(personRepository.existsByDocNumber(peopleDocNumber)).thenThrow(new NullPointerException());
 
                 mockMvc.perform(MockMvcRequestBuilders
-                                .delete("/api/v1/peoples/docNumbers/" + peopleDocNumber)
+                                .delete("/api/v1/people/docNumbers/" + peopleDocNumber)
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isNotFound());
         }

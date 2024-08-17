@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PersonRequest {
 
-    private int peopleId;
+    private int personId;
 
     private String firstName;
 

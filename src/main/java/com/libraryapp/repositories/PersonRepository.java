@@ -8,15 +8,13 @@ import org.springframework.stereotype.Repository;
 import com.libraryapp.entities.Person;
 
 @Repository
-public interface PeopleRepository extends CrudRepository<Person, Integer> {
+public interface PersonRepository extends CrudRepository<Person, Integer> {
 
     Person findByDocNumber(String docNumber);
 
     List<Person> findByDocType(String docType);
 
     List<Person> findByActivated(boolean activated);
-
-    boolean deleteByDocNumber(String docNumber);
 
     boolean existsByDocNumber(String docNumber);
 
