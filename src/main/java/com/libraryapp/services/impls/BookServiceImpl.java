@@ -32,9 +32,9 @@ public class BookServiceImpl implements BookService {
 
     public Book getBookByIsbnCode(String isbnCode) {
 
-        boolean existsByIsbncode = bookRepository.existsByIsbnCode(isbnCode);
+        boolean existsByIsbnCode = bookRepository.existsByIsbnCode(isbnCode);
 
-        if (existsByIsbncode) {
+        if (existsByIsbnCode) {
             return bookRepository.findByIsbnCode(isbnCode);
         }
         return null;
@@ -54,7 +54,7 @@ public class BookServiceImpl implements BookService {
                 bookRepository.save(book);
                 isDeleted = true;
             }
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             e.getCause();
         }
         return isDeleted;
@@ -108,7 +108,7 @@ public class BookServiceImpl implements BookService {
                     isDeleted = true;
                 }
             }
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             e.getCause();
         }
         return isDeleted;
