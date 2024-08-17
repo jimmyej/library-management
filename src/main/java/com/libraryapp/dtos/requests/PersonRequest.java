@@ -1,6 +1,7 @@
 package com.libraryapp.dtos.requests;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PeopleRequest {
+public class PersonRequest {
 
     private int peopleId;
 
@@ -29,13 +30,13 @@ public class PeopleRequest {
 
     private String phoneNumber;
 
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
-    private LocalDate createdBy;
+    private String createdBy;
 
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
-    private LocalDate updatedBy;
+    private String updatedBy;
 
     private boolean activated;
 

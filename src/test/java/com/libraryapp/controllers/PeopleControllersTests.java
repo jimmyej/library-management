@@ -22,8 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.libraryapp.dtos.requests.PeopleRequest;
-import com.libraryapp.entities.People;
+import com.libraryapp.dtos.requests.PersonRequest;
+import com.libraryapp.entities.Person;
 import com.libraryapp.repositories.PeopleRepository;
 import com.libraryapp.services.impls.PeopleServiceImpl;
 
@@ -40,7 +40,7 @@ class PeopleControllersTests {
         @Autowired
         ObjectMapper mapper;
 
-        People person1 = new People(
+        Person person1 = new Person(
                         1, "Juan", "Pérez",
                         LocalDate.of(1985, 5, 15),
                         "DNI", "12345678",
@@ -53,7 +53,7 @@ class PeopleControllersTests {
                         LocalDate.of(2024, 8, 12),
                         true);
 
-        People person2 = new People(
+        Person person2 = new Person(
                         2, "Maria", "Gonzalez",
                         LocalDate.of(1990, 7, 22),
                         "DNI", "87654321",
@@ -66,7 +66,7 @@ class PeopleControllersTests {
                         LocalDate.of(2024, 8, 12),
                         false);
 
-        People person3 = new People(
+        Person person3 = new Person(
                         3, "Carlos", "Fernandez",
                         LocalDate.of(1988, 11, 10),
                         "DNI", "34567890",
@@ -79,7 +79,7 @@ class PeopleControllersTests {
                         LocalDate.of(2024, 8, 12),
                         true);
 
-        People person4 = new People(
+        Person person4 = new Person(
                         4, "Laura", "Martinez",
                         LocalDate.of(1995, 2, 28),
                         "DNI", "45678901",
@@ -125,7 +125,7 @@ class PeopleControllersTests {
 
         @Test
         void getPeopleByDocType_success() throws Exception {
-                List<People> peoples = List.of(person1, person3);
+                List<Person> peoples = List.of(person1, person3);
                 String docType = "DNI";
                 Mockito.when(peopleRepository.findByDocType(docType)).thenReturn(peoples);
 
@@ -141,7 +141,7 @@ class PeopleControllersTests {
         @Test
         void getPeopleByDocType_noContent() throws Exception {
 
-                List<People> peoples = List.of();
+                List<Person> peoples = List.of();
                 String docType = "DNI";
                 Mockito.when(peopleRepository.findByDocType(docType)).thenReturn(peoples);
 
@@ -154,7 +154,7 @@ class PeopleControllersTests {
         @Test
         void getPeoplesByIsActivated_success() throws Exception {
 
-                List<People> peoples = List.of(person1, person2, person3);
+                List<Person> peoples = List.of(person1, person2, person3);
 
                 Mockito.when(peopleRepository.findByActivated(true)).thenReturn(peoples);
 
@@ -169,7 +169,7 @@ class PeopleControllersTests {
         @Test
         void getPeoples_noContact() throws Exception {
 
-                List<People> peoples = List.of();
+                List<Person> peoples = List.of();
                 Mockito.when(peopleRepository.findAll()).thenReturn(peoples);
 
                 mockMvc.perform(MockMvcRequestBuilders
@@ -182,7 +182,7 @@ class PeopleControllersTests {
         void registerPeople_success() throws Exception {
                 String docNumber = "12345678";
 
-                PeopleRequest person = new PeopleRequest();
+                PersonRequest person = new PersonRequest();
                 person.setFirstName("Juan");
                 person.setLastName("Pérez");
                 person.setBirthdate(LocalDate.of(1985, 5, 15));

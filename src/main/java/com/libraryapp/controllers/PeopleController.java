@@ -1,7 +1,7 @@
 package com.libraryapp.controllers;
 
-import com.libraryapp.dtos.requests.PeopleRequest;
-import com.libraryapp.entities.People;
+import com.libraryapp.dtos.requests.PersonRequest;
+import com.libraryapp.entities.Person;
 import com.libraryapp.services.PeopleService;
 
 import java.util.List;
@@ -21,8 +21,8 @@ public class PeopleController {
     }
 
     @GetMapping("/docNumber/{docNumber}")
-    ResponseEntity<People> getPeopleByDocNumber(@PathVariable String docNumber) {
-        People peoples = peopleService.getPeopleByDocNumber(docNumber);
+    ResponseEntity<Person> getPeopleByDocNumber(@PathVariable String docNumber) {
+        Person peoples = peopleService.getPeopleByDocNumber(docNumber);
         if (peoples == null) {
             return ResponseEntity.notFound().build();
         }
@@ -30,8 +30,8 @@ public class PeopleController {
     }
 
     @GetMapping("/docTypes/{docType}")
-    ResponseEntity<List<People>> getPeopleByDocType(@PathVariable String docType) {
-        List<People> peoples = peopleService.getPeopleByDocType(docType);
+    ResponseEntity<List<Person>> getPeopleByDocType(@PathVariable String docType) {
+        List<Person> peoples = peopleService.getPeopleByDocType(docType);
         if (peoples.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -39,8 +39,8 @@ public class PeopleController {
     }
 
     @GetMapping("")
-    ResponseEntity<List<People>> getPeoplesByIsActivated(@RequestParam(required = false) String activated) {
-        List<People> peoples = peopleService.getPeoplesByActivated(activated);
+    ResponseEntity<List<Person>> getPeoplesByIsActivated(@RequestParam(required = false) String activated) {
+        List<Person> peoples = peopleService.getPeoplesByActivated(activated);
         if (peoples.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -48,8 +48,8 @@ public class PeopleController {
     }
 
     @PostMapping("")
-    ResponseEntity<People> registerPeople(@RequestBody PeopleRequest people) {
-        People newPeople = peopleService.registerPeople(people);
+    ResponseEntity<Person> registerPeople(@RequestBody PersonRequest people) {
+        Person newPeople = peopleService.registerPeople(people);
 
         if (newPeople != null) {
             return new ResponseEntity<>(newPeople, HttpStatus.CREATED);
@@ -58,9 +58,9 @@ public class PeopleController {
     }
 
     @PutMapping("")
-    ResponseEntity<People> editPeople(@RequestBody PeopleRequest people) {
+    ResponseEntity<Person> editPeople(@RequestBody PersonRequest people) {
 
-        People newPeople = peopleService.editPeople(people);
+        Person newPeople = peopleService.editPeople(people);
         if (newPeople == null) {
             return ResponseEntity.notFound().build();
         }

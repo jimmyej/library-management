@@ -5,8 +5,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.libraryapp.dtos.requests.PeopleRequest;
-import com.libraryapp.entities.People;
+import com.libraryapp.dtos.requests.PersonRequest;
+import com.libraryapp.entities.Person;
 import com.libraryapp.enums.CommonConstants;
 import com.libraryapp.repositories.PeopleRepository;
 import com.libraryapp.services.PeopleService;
@@ -20,40 +20,40 @@ public class PeopleServiceImpl implements PeopleService {
         this.peopleRepository = peopleRepository;
     }
 
-    public People registerPeople(PeopleRequest people) {
-        boolean existsByDocNumber = peopleRepository.existsByDocNumber(people.getDocNumber());
+    public Person registerPeople(PersonRequest person) {
+        boolean existsByDocNumber = peopleRepository.existsByDocNumber(person.getDocNumber());
 
         if (!existsByDocNumber) {
-            return peopleRepository.save(builPeopleRequest(people, 0));
+            return peopleRepository.save(builPeopleRequest(person, 0));
         }
 
         return null;
     }
 
-    private People builPeopleRequest(PeopleRequest people, int id) {
+    private Person builPeopleRequest(PersonRequest person, int id) {
 
-        People newPeople = new People();
+        Person newPerson = new Person();
         if (id > 0) {
-            newPeople.setPeopleId(id);
+            newPerson.setPeopleId(id);
         }
-        newPeople.setFirstName(people.getFirstName());
-        newPeople.setLastName(people.getLastName());
-        newPeople.setBirthdate(people.getBirthdate());
-        newPeople.setDocType(people.getDocType());
-        newPeople.setDocNumber(people.getDocNumber());
-        newPeople.setAddress(people.getAddress());
-        newPeople.setEmail(people.getEmail());
-        newPeople.setPhoneNumber(people.getPhoneNumber());
-        newPeople.setCreatedAt(people.getCreatedAt());
-        newPeople.setCreatedBy(people.getCreatedBy());
-        newPeople.setUpdatedAt(people.getUpdatedAt());
-        newPeople.setUpdatedBy(people.getUpdatedBy());
-        newPeople.setActivated(people.isActivated());
+        newPerson.setFirstName(person.getFirstName());
+        newPerson.setLastName(person.getLastName());
+        newPerson.setBirthdate(person.getBirthdate());
+        newPerson.setDocType(person.getDocType());
+        newPerson.setDocNumber(person.getDocNumber());
+        newPerson.setAddress(person.getAddress());
+        newPerson.setEmail(person.getEmail());
+        newPerson.setPhoneNumber(person.getPhoneNumber());
+        newPerson.setCreatedAt(person.getCreatedAt());
+        newPerson.setCreatedBy(person.getCreatedBy());
+        newPerson.setUpdatedAt(person.getUpdatedAt());
+        newPerson.setUpdatedBy(person.getUpdatedBy());
+        newPerson.setActivated(person.isActivated());
 
-        return newPeople;
+        return newPerson;
     }
 
-    public People getPeopleByDocNumber(String docNumber) {
+    public Person getPeopleByDocNumber(String docNumber) {
         boolean existsByDocNumber = peopleRepository.existsByDocNumber(docNumber);
 
         if (existsByDocNumber) {
@@ -62,28 +62,28 @@ public class PeopleServiceImpl implements PeopleService {
         return null;
     }
 
-    public List<People> getPeopleByDocType(String docType) {
+    public List<Person> getPeopleByDocType(String docType) {
 
         return peopleRepository.findByDocType(docType);
     }
 
-    public List<People> getPeoplesByActivated(String activated) {
+    public List<Person> getPeoplesByActivated(String activated) {
         if (activated != null) {
             boolean status = activated.equals(CommonConstants.ACTIVATED.name());
             return peopleRepository.findByActivated(status);
         } else {
-            return (List<People>) peopleRepository.findAll();
+            return (List<Person>) peopleRepository.findAll();
         }
     }
 
-    public People editPeople(PeopleRequest people) {
+    public Person editPeople(PersonRequest person) {
 
-        boolean existsById = peopleRepository.existsById(people.getPeopleId());
+        boolean existsById = peopleRepository.existsById(person.getPeopleId());
 
         if (existsById) {
-            Optional<People> existingPeople = peopleRepository.findById(people.getPeopleId());
+            Optional<Person> existingPeople = peopleRepository.findById(person.getPeopleId());
             if (existingPeople.isPresent()) {
-                return peopleRepository.save(builPeopleRequest(people, people.getPeopleId()));
+                return peopleRepository.save(builPeopleRequest(person, person.getPeopleId()));
             }
             return null;
         }
@@ -95,10 +95,10 @@ public class PeopleServiceImpl implements PeopleService {
         try {
             boolean existsById = peopleRepository.existsById(peopleId);
             if (existsById) {
-                Optional<People> people = peopleRepository.findById(peopleId);
-                if (people.isPresent()) {
-                    people.get().setActivated(false);
-                    peopleRepository.save(people.get());
+                Optional<Person> person = peopleRepository.findById(peopleId);
+                if (person.isPresent()) {
+                    person.get().setActivated(false);
+                    peopleRepository.save(person.get());
                     isDeleted = true;
                 }
             }
@@ -113,9 +113,9 @@ public class PeopleServiceImpl implements PeopleService {
         try {
             boolean existsByDocNumber = peopleRepository.existsByDocNumber(docNumber);
             if (existsByDocNumber) {
-                People people = peopleRepository.findByDocNumber(docNumber);
-                people.setActivated(false);
-                peopleRepository.save(people);
+                Person person = peopleRepository.findByDocNumber(docNumber);
+                person.setActivated(false);
+                peopleRepository.save(person);
                 isDeleted = true;
             }
         } catch (Exception e) {
