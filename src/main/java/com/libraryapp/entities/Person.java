@@ -1,7 +1,7 @@
 package com.libraryapp.entities;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,12 +22,12 @@ import lombok.ToString;
 @ToString
 
 @Entity
-@Table(name = "peoples")
-public class People {
+@Table(name = "people")
+public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int peopleId;
+    private int personId;
 
     @Column(name = "first_name", length = 100)
     private String firstName;
@@ -53,16 +53,16 @@ public class People {
     private String phoneNumber;
 
     @Column(name = "created_at")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "created_by")
-    private LocalDate createdBy;
+    private String createdBy;
 
     @Column(name = "updated_at")
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "updated_by")
-    private LocalDate updatedBy;
+    private String updatedBy;
 
     @Column(name = "is_activated")
     private boolean activated;
