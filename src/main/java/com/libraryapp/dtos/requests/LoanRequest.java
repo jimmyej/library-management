@@ -1,6 +1,6 @@
 package com.libraryapp.dtos.requests;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.libraryapp.enums.CommonConstants;
 
@@ -15,7 +15,7 @@ public class LoanRequest {
     private int loanId;
     private String customerName;
     private String employeeName;
-    private LocalDate loanDate;
-    private LocalDate returnDate;
+    private LocalDateTime loanDate;
+    private LocalDateTime returnDate;
     private CommonConstants loanStatus;
 }

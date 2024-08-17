@@ -9,6 +9,7 @@ import com.libraryapp.dtos.requests.LoanRequest;
 import com.libraryapp.entities.Loan;
 import com.libraryapp.services.LoanService;
 
+@SuppressWarnings("unused")
 @RestController
 @RequestMapping("/api/v1/loans")
 public class LoanController {

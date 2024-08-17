@@ -5,12 +5,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,23 +41,18 @@ class LoanControllerTests {
     ObjectMapper mapper;
 
     Loan loan1 = new Loan(1,"Jose Perez", "Carlos Ramirez", 
-            LocalDate.of(2024, 7, 25), LocalDate.of(2024, 7, 30), CommonConstants.LOANED);
-    Loan loan2 = new Loan(2,"Pedro Sanchez", "Carlos Ramirez", 
-            LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 8), CommonConstants.RESERVED);
-    Loan loan3 = new Loan(3,"Ramona Castilla", "Jhon Smith", 
-            LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 10), CommonConstants.LOANED);
-    Loan loan4 = new Loan(3,"Ramona Castilla", "Jhon Smith", 
-            LocalDate.of(2024, 7, 20), LocalDate.of(2024, 8, 1), CommonConstants.FINISHED);
+            LocalDateTime.of(2024, 7, 25, 10,45,20), LocalDateTime.of(2024, 7, 30, 10,45,20), CommonConstants.LOANED);
+    Loan loan2 = new Loan(2,"Pedro Sanchez", "Carlos Ramirez",
+            LocalDateTime.of(2024, 8, 1, 10,45,20), LocalDateTime.of(2024, 8, 8, 10,45,20), CommonConstants.RESERVED);
+    Loan loan3 = new Loan(3,"Ramona Castilla", "Jhon Smith",
+            LocalDateTime.of(2024, 8, 1, 10,45,20), LocalDateTime.of(2024, 8, 10, 10,45,20), CommonConstants.LOANED);
+    Loan loan4 = new Loan(3,"Ramona Castilla", "Jhon Smith",
+            LocalDateTime.of(2024, 7, 20, 10,45,20), LocalDateTime.of(2024, 8, 1, 10,45,20), CommonConstants.FINISHED);
 
-    Loan loan5 = new Loan(4,"Pedro Sanchez", "Carlos Ramirez", 
-            LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 1), CommonConstants.INACTIVATED);
-    Loan loan6 = new Loan(5,"Ramona Castilla", "Jhon ", 
-            LocalDate.of(2024, 8, 1), LocalDate.of(2024, 8, 1), CommonConstants.INACTIVATED);
-
-    @AfterEach
-    void setup() { 
-    
-    }
+    Loan loan5 = new Loan(4,"Pedro Sanchez", "Carlos Ramirez",
+            LocalDateTime.of(2024, 8, 1, 10,45,20), LocalDateTime.of(2024, 8, 1, 10,45,20), CommonConstants.INACTIVATED);
+    Loan loan6 = new Loan(5,"Ramona Castilla", "Jhon ",
+            LocalDateTime.of(2024, 8, 1, 10,45,20), LocalDateTime.of(2024, 8, 1, 10,45,20), CommonConstants.INACTIVATED);
 
     @Test
     void getLoansByCustomerName_success() throws Exception {
@@ -156,8 +150,8 @@ class LoanControllerTests {
         LoanRequest loan = new LoanRequest();
         loan.setCustomerName("Francis McBucket");
         loan.setEmployeeName("Carlos Ramirez");
-        loan.setLoanDate(LocalDate.of(2024, 8, 5));
-        loan.setReturnDate(LocalDate.of(2024, 8, 15));
+        loan.setLoanDate(LocalDateTime.of(2024, 8, 5, 10,45,20));
+        loan.setReturnDate(LocalDateTime.of(2024, 8, 15, 10,45,20));
         loan.setLoanStatus(CommonConstants.RESERVED);
         
         Mockito.when(loanRepository.save(any())).thenReturn(loan1);
