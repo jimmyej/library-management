@@ -40,16 +40,16 @@ public class Person {
     @Column(name = "doc_type", length = 50)
     private String docType;
 
-    @Column(name = "doc_number", unique = true, length = 40)
+    @Column(name = "doc_number", unique = true, length = 30)
     private String docNumber;
 
-    @Column(length = 100)
+    @Column(length = 150)
     private String address;
 
     @Column(length = 100, unique = true)
     private String email;
 
-    @Column(name = "phone_number", unique = true)
+    @Column(name = "phone_number", unique = true , length = 15)
     private String phoneNumber;
 
     @Column(name = "created_at")

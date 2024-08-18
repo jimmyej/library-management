@@ -79,31 +79,25 @@ public class PersonServiceImpl implements PersonService {
     }
 
     public Person editPerson(PersonRequest personRequest) {
-
-        boolean existsById = personRepository.existsById(personRequest.getPersonId());
-
-        if (existsById) {
             Optional<Person> existingPerson = personRepository.findById(personRequest.getPersonId());
             if (existingPerson.isPresent()) {
                 return personRepository.save(buildPersonRequest(personRequest, personRequest.getPersonId()));
             }
-            return null;
-        }
+
         return null;
     }
+
 
     public boolean removePersonById(int personId) {
         boolean isDeleted = false;
         try {
-            boolean existsById = personRepository.existsById(personId);
-            if (existsById) {
+
                 Optional<Person> person = personRepository.findById(personId);
                 if (person.isPresent()) {
                     person.get().setActivated(false);
                     personRepository.save(person.get());
                     isDeleted = true;
                 }
-            }
         } catch (NullPointerException e) {
             e.getCause();
         }

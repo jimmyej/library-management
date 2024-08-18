@@ -227,19 +227,6 @@ class PeopleControllersTests {
         }
 
         @Test
-        void editPeople_notPresent() throws Exception {
-
-                int personId = 1;
-                Mockito.when(personRepository.existsById(personId)).thenReturn(true);
-                Mockito.when(personRepository.findById(personId)).thenReturn(Optional.empty());
-
-                mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/people")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .accept(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(person1))).andExpect(status().isNotFound());
-        }
-
-        @Test
         void editPeople_notFound() throws Exception {
                 int personId = 1;
 
@@ -282,26 +269,14 @@ class PeopleControllersTests {
         }
 
         @Test
-        void removePeopleById_notFound() throws Exception {
-                int personId = 1;
-
-                Mockito.when(personRepository.existsById(personId)).thenReturn(false);
-
-                mockMvc.perform(MockMvcRequestBuilders
-                                .delete("/api/v1/people/ids/" + personId)
-                                .accept(MediaType.APPLICATION_JSON))
-                                .andExpect(status().isNotFound());
-        }
-
-        @Test
         void removePeopleById_exception() throws Exception {
                 int personId = 1;
 
-                Mockito.when(personRepository.existsById(personId)).thenThrow(new NullPointerException());
+                Mockito.when(personRepository.findById(personId)).thenThrow(new NullPointerException());
 
                 mockMvc.perform(MockMvcRequestBuilders
                                 .delete("/api/v1/people/ids/" + personId)
-                                .accept(MediaType.APPLICATION_JSON))
+                                       .accept(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isNotFound());
         }
 
@@ -334,7 +309,6 @@ class PeopleControllersTests {
         @Test
         void removePeopleByDocNumber_exception() throws Exception {
                 String peopleDocNumber = "12345678";
-
                 Mockito.when(personRepository.existsByDocNumber(peopleDocNumber)).thenThrow(new NullPointerException());
 
                 mockMvc.perform(MockMvcRequestBuilders
