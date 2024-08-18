@@ -1,9 +1,8 @@
 package com.libraryapp.entities;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import com.libraryapp.enums.CommonConstants;
 

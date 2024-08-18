@@ -154,6 +154,7 @@ class LoanControllerTests {
         loan.setReturnDate(LocalDateTime.of(2024, 8, 15, 10,45,20));
         loan.setLoanStatus(CommonConstants.RESERVED);
         
+        Mockito.when(loanRepository.findById(0)).thenReturn(Optional.empty());
         Mockito.when(loanRepository.save(any())).thenReturn(loan1);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -168,7 +169,8 @@ class LoanControllerTests {
     @Test
     void registerLoan_found() throws Exception {
         int loanId = 1;
-        Mockito.when(loanRepository.existsById(loanId)).thenReturn(true);
+        
+        Mockito.when(loanRepository.findById(loanId)).thenReturn(Optional.of(loan1));
 
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/api/v1/loans")
@@ -182,7 +184,7 @@ class LoanControllerTests {
     @Test
     void editLoan_success() throws Exception {
         int loanId = 1;
-        Mockito.when(loanRepository.existsById(loanId)).thenReturn(true);
+
         Mockito.when(loanRepository.findById(loanId)).thenReturn(Optional.of(loan1));
         Mockito.when(loanRepository.save(any())).thenReturn(loan1);
 
@@ -197,21 +199,7 @@ class LoanControllerTests {
     @Test
     void editLoan_notPresent() throws Exception {
         int loanId = 1;
-        Mockito.when(loanRepository.existsById(loanId)).thenReturn(true);
         Mockito.when(loanRepository.findById(loanId)).thenReturn(Optional.empty());
-
-        mockMvc.perform(MockMvcRequestBuilders
-                .put("/api/v1/loans")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(loan1)))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void editLoan_notFound() throws Exception {
-        int loanId = 1;
-        Mockito.when(loanRepository.existsById(loanId)).thenReturn(false);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .put("/api/v1/loans")
@@ -224,7 +212,7 @@ class LoanControllerTests {
     @Test
     void removeLoanByLoanId_success() throws Exception {
         int loanId = 1;
-        Mockito.when(loanRepository.existsById(loanId)).thenReturn(true);
+
         Mockito.when(loanRepository.findById(loanId)).thenReturn(Optional.of(loan1));
         Mockito.when(loanRepository.save(loan1)).thenReturn(loan1);
 
@@ -237,30 +225,8 @@ class LoanControllerTests {
     @Test
     void removeLoanByLoanId_notPresent() throws Exception {
         int loanId = 1;
-        Mockito.when(loanRepository.existsById(loanId)).thenReturn(true);
+
         Mockito.when(loanRepository.findById(loanId)).thenReturn(Optional.empty());
-
-        mockMvc.perform(MockMvcRequestBuilders
-                .delete("/api/v1/loans/ids/" + loanId)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
-    
-    @Test
-    void removeLoanByLoanId_notFound() throws Exception {
-        int loanId = 1;
-        Mockito.when(loanRepository.existsById(loanId)).thenReturn(false);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                .delete("/api/v1/loans/ids/" + loanId)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
-    
-    @Test
-    void removeLoanById_exception() throws Exception {
-        int loanId = 1;
-        Mockito.when(loanRepository.existsById(loanId)).thenThrow(new NullPointerException());
 
         mockMvc.perform(MockMvcRequestBuilders
                 .delete("/api/v1/loans/ids/" + loanId)

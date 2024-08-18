@@ -40,37 +40,29 @@ public class LoanServiceImpl implements LoanService{
     }
 
     public Loan registerLoan(LoanRequest loan) {
-        return loanRepository.save(buildLoanRequest(loan, 0));
+        Optional<Loan> newLoan = loanRepository.findById(loan.getLoanId());
+        if (!newLoan.isPresent()) {
+            return loanRepository.save(buildLoanRequest(loan, 0));
+        }
+        return null;
     }
 
     public Loan editLoan(LoanRequest loan) {
-        boolean existById = loanRepository.existsById(loan.getLoanId());
-        if (existById) {
-            Optional<Loan> existingLoan = loanRepository.findById(loan.getLoanId());
-            if(existingLoan.isPresent()) {
-                return loanRepository.save(buildLoanRequest(loan, loan.getLoanId()));
-            }
-            return null;
+        Optional<Loan> existingLoan = loanRepository.findById(loan.getLoanId());
+        if(existingLoan.isPresent()) {
+            return loanRepository.save(buildLoanRequest(loan, loan.getLoanId()));
         }
         return null;
     }
 
     public boolean removeLoanById(int loanId) {
-        boolean isDeleted = false;
-        try {
-            boolean existById = loanRepository.existsById(loanId);
-            if (existById) {
-                Optional<Loan> loan = loanRepository.findById(loanId);
-                if(loan.isPresent()) {
-                    loan.get().setLoanStatus(CommonConstants.INACTIVATED);
-                    loanRepository.save(loan.get());
-                    isDeleted = true;
-                }
-            }
-        } catch (NullPointerException e) {
-            e.getCause();
+        Optional<Loan> loan = loanRepository.findById(loanId);
+        if(loan.isPresent()) {
+            loan.get().setLoanStatus(CommonConstants.INACTIVATED);
+            loanRepository.save(loan.get());
+            return true;
         }
-        return isDeleted;
+        return false;
     }
 
     private Loan buildLoanRequest(LoanRequest loan, int id) {
@@ -85,7 +77,5 @@ public class LoanServiceImpl implements LoanService{
         newLoan.setLoanStatus(loan.getLoanStatus());
         return newLoan;
     }
-
-
 
 }
