@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.libraryapp.dtos.requests.LoanRequest;
 import com.libraryapp.entities.Loan;
 import com.libraryapp.enums.CommonConstants;
+import com.libraryapp.enums.LoanConstants;
 import com.libraryapp.repositories.LoanRepository;
 import com.libraryapp.services.impls.LoanServiceImpl;
 
@@ -41,18 +42,18 @@ class LoanControllerTests {
     ObjectMapper mapper;
 
     Loan loan1 = new Loan(1,"Jose Perez", "Carlos Ramirez", 
-            LocalDateTime.of(2024, 7, 25, 10,45,20), LocalDateTime.of(2024, 7, 30, 10,45,20), CommonConstants.LOANED);
+            LocalDateTime.of(2024, 7, 25, 10,45,20), LocalDateTime.of(2024, 7, 30, 10,45,20), LoanConstants.LOANED);
     Loan loan2 = new Loan(2,"Pedro Sanchez", "Carlos Ramirez",
-            LocalDateTime.of(2024, 8, 1, 10,45,20), LocalDateTime.of(2024, 8, 8, 10,45,20), CommonConstants.RESERVED);
+            LocalDateTime.of(2024, 8, 1, 10,45,20), LocalDateTime.of(2024, 8, 8, 10,45,20), LoanConstants.RESERVED);
     Loan loan3 = new Loan(3,"Ramona Castilla", "Jhon Smith",
-            LocalDateTime.of(2024, 8, 1, 10,45,20), LocalDateTime.of(2024, 8, 10, 10,45,20), CommonConstants.LOANED);
+            LocalDateTime.of(2024, 8, 1, 10,45,20), LocalDateTime.of(2024, 8, 10, 10,45,20), LoanConstants.LOANED);
     Loan loan4 = new Loan(3,"Ramona Castilla", "Jhon Smith",
-            LocalDateTime.of(2024, 7, 20, 10,45,20), LocalDateTime.of(2024, 8, 1, 10,45,20), CommonConstants.FINISHED);
+            LocalDateTime.of(2024, 7, 20, 10,45,20), LocalDateTime.of(2024, 8, 1, 10,45,20), LoanConstants.FINISHED);
 
     Loan loan5 = new Loan(4,"Pedro Sanchez", "Carlos Ramirez",
-            LocalDateTime.of(2024, 8, 1, 10,45,20), LocalDateTime.of(2024, 8, 1, 10,45,20), CommonConstants.INACTIVATED);
+            LocalDateTime.of(2024, 8, 1, 10,45,20), LocalDateTime.of(2024, 8, 1, 10,45,20), LoanConstants.CANCELLED);
     Loan loan6 = new Loan(5,"Ramona Castilla", "Jhon ",
-            LocalDateTime.of(2024, 8, 1, 10,45,20), LocalDateTime.of(2024, 8, 1, 10,45,20), CommonConstants.INACTIVATED);
+            LocalDateTime.of(2024, 8, 1, 10,45,20), LocalDateTime.of(2024, 8, 1, 10,45,20), LoanConstants.CANCELLED);
 
     @Test
     void getLoansByCustomerName_success() throws Exception {
@@ -111,10 +112,10 @@ class LoanControllerTests {
     @Test
     void getLoansByStatus_success() throws Exception {
         List<Loan> loans = List.of(loan1, loan2, loan3, loan4, loan5, loan6);
-        Mockito.when(loanRepository.findByLoanStatus(CommonConstants.ACTIVATED)).thenReturn(loans);
+        Mockito.when(loanRepository.findByLoanStatus(LoanConstants.LOANED)).thenReturn(loans);
 
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/api/v1/loans?loanStatus=ACTIVATED")
+                .get("/api/v1/loans?loanStatus=LOANED")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", notNullValue()))
@@ -152,7 +153,7 @@ class LoanControllerTests {
         loan.setEmployeeName("Carlos Ramirez");
         loan.setLoanDate(LocalDateTime.of(2024, 8, 5, 10,45,20));
         loan.setReturnDate(LocalDateTime.of(2024, 8, 15, 10,45,20));
-        loan.setLoanStatus(CommonConstants.RESERVED);
+        loan.setLoanStatus(LoanConstants.RESERVED);
         
         Mockito.when(loanRepository.findById(0)).thenReturn(Optional.empty());
         Mockito.when(loanRepository.save(any())).thenReturn(loan1);

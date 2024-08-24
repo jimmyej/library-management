@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.libraryapp.dtos.requests.LoanRequest;
 import com.libraryapp.entities.Loan;
-import com.libraryapp.enums.CommonConstants;
+import com.libraryapp.enums.LoanConstants;
 import com.libraryapp.repositories.LoanRepository;
 import com.libraryapp.services.LoanService;
 
@@ -32,7 +32,7 @@ public class LoanServiceImpl implements LoanService{
 
     public List<Loan> getLoansByStatus(String loanStatus) {
         if(loanStatus != null){
-            CommonConstants status = CommonConstants.valueOf(loanStatus.toUpperCase());
+            LoanConstants status = LoanConstants.valueOf(loanStatus.toUpperCase());
             return loanRepository.findByLoanStatus(status);
         } else {
             return (List<Loan>) loanRepository.findAll();
@@ -58,7 +58,7 @@ public class LoanServiceImpl implements LoanService{
     public boolean removeLoanById(int loanId) {
         Optional<Loan> loan = loanRepository.findById(loanId);
         if(loan.isPresent()) {
-            loan.get().setLoanStatus(CommonConstants.INACTIVATED);
+            loan.get().setLoanStatus(LoanConstants.CANCELLED);
             loanRepository.save(loan.get());
             return true;
         }

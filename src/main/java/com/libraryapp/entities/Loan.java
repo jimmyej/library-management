@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 
-import com.libraryapp.enums.CommonConstants;
+import com.libraryapp.enums.LoanConstants;
 
 import lombok.*;
 
@@ -32,6 +32,6 @@ public class Loan {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "loan_status", length = 50)
-    private CommonConstants loanStatus;
+    private LoanConstants loanStatus;
     
 }

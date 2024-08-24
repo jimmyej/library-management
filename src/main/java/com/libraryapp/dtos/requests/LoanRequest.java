@@ -2,7 +2,7 @@ package com.libraryapp.dtos.requests;
 
 import java.time.LocalDateTime;
 
-import com.libraryapp.enums.CommonConstants;
+import com.libraryapp.enums.LoanConstants;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,5 +17,5 @@ public class LoanRequest {
     private String employeeName;
     private LocalDateTime loanDate;
     private LocalDateTime returnDate;
-    private CommonConstants loanStatus;
+    private LoanConstants loanStatus;
 }
