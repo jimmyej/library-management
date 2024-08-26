@@ -6,7 +6,6 @@ import com.libraryapp.entities.Book;
 import com.libraryapp.repositories.BookRepository;
 import com.libraryapp.services.impls.BookServiceImpl;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +52,6 @@ class BookControllerTests {
                         "ENG", "Jhon Smith", LocalDate.of(2022, 4, 3), "756347894", false);
         Book book5 = new Book(5, "Programming with Node and NextJs", "Programming", "Editorial XYZ", (short) 230, "ESP",
                         "Pepito Perez", LocalDate.of(2021, 6, 6), "0987634733", false);
-
-        @AfterEach
-        void setup() {
-
-        }
 
         @Test
         void getBooksByTitle_success() throws Exception {
