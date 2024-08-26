@@ -1,5 +1,6 @@
 package com.libraryapp.controllers;
 
+import com.libraryapp.dtos.requests.BookRequest;
 import com.libraryapp.entities.Book;
 import com.libraryapp.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +10,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 @RestController
 @RequestMapping("/api/v1/books")
 public class BookController {
 
-    @Autowired
     BookService bookService;
+
+    @Autowired
+    BookController(BookService bookService){
+        this.bookService = bookService;
+    }
 
     @GetMapping("/titles/{title}")
     ResponseEntity<List<Book>> getBooksByTitle(@PathVariable String title){
@@ -71,8 +77,7 @@ public class BookController {
     }
 
     @PostMapping("")
-    @ResponseBody
-    ResponseEntity<Book> registerBook(@RequestBody Book book){
+    ResponseEntity<Book> registerBook(@RequestBody BookRequest book){
         Book newBook = bookService.registerBook(book);
         if(newBook != null){
             return new ResponseEntity<>(newBook, HttpStatus.CREATED);
@@ -81,13 +86,12 @@ public class BookController {
     }
 
     @PutMapping("")
-    @ResponseBody
-    ResponseEntity<Book> editBook(@RequestBody Book book){
+    ResponseEntity<Book> editBook(@RequestBody BookRequest book){
         Book newBook = bookService.editBook(book);
         if(newBook == null){
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(newBook);
     }
 
     @DeleteMapping("/ids/{bookId}")
