@@ -6,15 +6,25 @@ import com.libraryapp.entities.Book;
 import java.util.List;
 
 public interface BookService {
-    List<Book> getBooksByTitle(String title);
-    List<Book> getBooksByGender(String gender);
-    List<Book> getBooksByAuthor(String author);
-    Book getBookByIsbnCode(String isbnCode);
-    List<Book> getBooksByLanguage(String language);
-    boolean removeBookByIsbnCode(String isbnCode);
 
     Book registerBook(BookRequest book);
-    Book editBook(BookRequest book);
-    boolean removeBookById(int bookId);
+
+    List<Book> getBooksByTitle(String title);
+
+    List<Book> getBooksByGender(String gender);
+
+    List<Book> getBooksByAuthor(String author);
+
     List<Book> getBooksByIsActivated(String activated);
+
+    Book getBookByIsbnCode(String isbnCode);
+
+    List<Book> getBooksByLanguage(String language);
+
+    Book editBook(BookRequest book);
+
+    boolean removeBookByIsbnCode(String isbnCode);
+
+    boolean removeBookById(int bookId);
+
 }

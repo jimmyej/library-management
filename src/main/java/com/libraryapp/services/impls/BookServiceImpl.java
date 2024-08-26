@@ -5,6 +5,7 @@ import com.libraryapp.entities.Book;
 import com.libraryapp.enums.CommonConstants;
 import com.libraryapp.repositories.BookRepository;
 import com.libraryapp.services.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.Optional;
 public class BookServiceImpl implements BookService {
 
     BookRepository bookRepository;
+
+    @Autowired
     BookServiceImpl(BookRepository bookRepository){
         this.bookRepository = bookRepository;
     }
