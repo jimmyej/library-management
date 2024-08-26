@@ -5,7 +5,6 @@ import com.libraryapp.entities.Book;
 import com.libraryapp.enums.CommonConstants;
 import com.libraryapp.repositories.BookRepository;
 import com.libraryapp.services.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +15,7 @@ public class BookServiceImpl implements BookService {
 
     BookRepository bookRepository;
 
-    @Autowired
-    BookServiceImpl(BookRepository bookRepository){
+    BookServiceImpl(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
@@ -48,6 +46,7 @@ public class BookServiceImpl implements BookService {
     }
 
     public boolean removeBookByIsbnCode(String isbnCode) {
+
         boolean isDeleted = false;
         try {
             boolean existsByIsbnCode = bookRepository.existsByIsbnCode(isbnCode);
@@ -66,13 +65,14 @@ public class BookServiceImpl implements BookService {
     public Book registerBook(BookRequest book) {
         boolean existsByIsbnCode = bookRepository.existsByIsbnCode(book.getIsbnCode());
         if (!existsByIsbnCode) {
-            return bookRepository.save(buildBookRequest(book,0));
+            return bookRepository.save(buildBookRequest(book, 0));
         }
         return null;
     }
-    private Book buildBookRequest(BookRequest book, int id){
+
+    private Book buildBookRequest(BookRequest book, int id) {
         Book newBook = new Book();
-        if(id > 0){
+        if (id > 0) {
             newBook.setBookId(id);
         }
         newBook.setTitle(book.getTitle());
@@ -105,7 +105,7 @@ public class BookServiceImpl implements BookService {
             boolean existById = bookRepository.existsById(bookId);
             if (existById) {
                 Optional<Book> book = bookRepository.findById(bookId);
-                if(book.isPresent()){
+                if (book.isPresent()) {
                     book.get().setActivated(false);
                     bookRepository.save(book.get());
                     isDeleted = true;
@@ -125,4 +125,5 @@ public class BookServiceImpl implements BookService {
             return (List<Book>) bookRepository.findAll();
         }
     }
+
 }
