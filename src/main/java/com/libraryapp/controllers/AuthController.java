@@ -70,6 +70,9 @@ public class AuthController {
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(encoder.encode(request.getPassword()))
+                .createdBy(request.getCreatedBy())
+                .updatedBy(request.getUpdatedBy())
+                .enabled(true)
                 .build();
 
         Set<String> setRoles = request.getRoles();

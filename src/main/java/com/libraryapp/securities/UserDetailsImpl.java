@@ -24,6 +24,8 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private String password;
     private boolean enabled;
+    private String createdBy;
+    private String updatedBy;
 
     private Collection<? extends GrantedAuthority> authorities;
 
@@ -40,6 +42,8 @@ public class UserDetailsImpl implements UserDetails {
                 .email(user.getEmail())
                 .enabled(user.isEnabled())
                 .authorities(authorities)
+                .createdBy(user.getCreatedBy())
+                .updatedBy(user.getUpdatedBy())
                 .build();
     }
 
