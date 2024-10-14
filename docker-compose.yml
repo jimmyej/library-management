@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+
+  librarydb:
+    image: postgres:10.20-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres:/data/postgres
+    networks:
+      - library-private-network
+    restart: unless-stopped
+
+  libraryapp:
+    image: jimmyej/library-management:1.0.0
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://librarydb:5432/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - LIBRARY_SECRET=${JWT_SECRET}
+    networks:
+      - library-private-network
+    depends_on:
+      - librarydb
+
+networks:
+  library-private-network:
+    driver: bridge
+
+volumes:
+  postgres:

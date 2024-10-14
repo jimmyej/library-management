@@ -4,15 +4,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.libraryapp.dtos.requests.BookRequest;
 import com.libraryapp.entities.Book;
 import com.libraryapp.repositories.BookRepository;
+import com.libraryapp.securities.AuthEntryPointJwt;
+import com.libraryapp.securities.JwtUtils;
+import com.libraryapp.securities.WebSecurityConfig;
 import com.libraryapp.services.impls.BookServiceImpl;
+import com.libraryapp.services.impls.UserDetailsServiceImpl;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -25,8 +33,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SuppressWarnings("unused")
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(BookController.class)
-@Import(BookServiceImpl.class)
+@ActiveProfiles("test")
+@Import({BookServiceImpl.class, WebSecurityConfig.class, JwtUtils.class})
+@WithMockUser(username = "user", authorities={"ROLE_USER", "ROLE_ADMIN"})
 class BookControllerTests {
 
         @Autowired
@@ -37,6 +49,15 @@ class BookControllerTests {
 
         @Autowired
         ObjectMapper mapper;
+
+        @MockBean
+        UserDetailsServiceImpl userDetailsService;
+
+        @MockBean
+        AuthEntryPointJwt authEntryPointJwt;
+
+        @Autowired
+        JwtUtils jwtUtils;
 
         Book book1 = new Book(1, "Testing with Mockito", "Programming", "Editorial ABC", (short) 254, "ESP",
                         "Pepito Perez",
