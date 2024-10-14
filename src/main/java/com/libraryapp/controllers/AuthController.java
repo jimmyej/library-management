@@ -14,6 +14,7 @@ import com.libraryapp.securities.UserDetailsImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -104,7 +105,7 @@ public class AuthController {
         }
         user.setRoles(roles);
         userRepository.save(user);
-        return ResponseEntity.ok(new MessageResponse("User registered successfully"));
+        return new ResponseEntity<>(new MessageResponse("User registered successfully"), HttpStatus.CREATED);
     }
 
     @PostMapping("/signin")

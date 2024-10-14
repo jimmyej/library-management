@@ -41,7 +41,8 @@
 			**/LibraryManagementApplication.java,
 			**/entities/**,
 			**/dtos/**,
-			**/enums/**
+			**/enums/**,
+			**/securities/**
 		</sonar.exclusions>
 
 	</properties>
@@ -105,6 +106,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -141,6 +147,7 @@
 						<exclude>**/entities/**</exclude>
 						<exclude>**/dtos/**</exclude>
 						<exclude>**/enums/**</exclude>
+						<exclude>**/securities/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>
