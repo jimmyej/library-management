@@ -9,27 +9,38 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.libraryapp.securities.AuthEntryPointJwt;
+import com.libraryapp.securities.JwtUtils;
+import com.libraryapp.securities.WebSecurityConfig;
+import com.libraryapp.services.impls.UserDetailsServiceImpl;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.libraryapp.dtos.requests.LoanRequest;
 import com.libraryapp.entities.Loan;
-import com.libraryapp.enums.CommonConstants;
 import com.libraryapp.enums.LoanConstants;
 import com.libraryapp.repositories.LoanRepository;
 import com.libraryapp.services.impls.LoanServiceImpl;
 
+@SuppressWarnings("unused")
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(LoanController.class)
-@Import(LoanServiceImpl.class)
+@ActiveProfiles("test")
+@Import({LoanServiceImpl.class, WebSecurityConfig.class, JwtUtils.class})
+@WithMockUser(username = "user", authorities={"ROLE_USER", "ROLE_ADMIN"})
 class LoanControllerTests {
 
     @Autowired
@@ -40,6 +51,15 @@ class LoanControllerTests {
 
     @Autowired
     ObjectMapper mapper;
+
+    @MockBean
+    UserDetailsServiceImpl userDetailsService;
+
+    @MockBean
+    AuthEntryPointJwt authEntryPointJwt;
+
+    @Autowired
+    JwtUtils jwtUtils;
 
     Loan loan1 = new Loan(1,"Jose Perez", "Carlos Ramirez", 
             LocalDateTime.of(2024, 7, 25, 10,45,20), LocalDateTime.of(2024, 7, 30, 10,45,20), LoanConstants.LOANED);

@@ -10,19 +10,22 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.libraryapp.securities.AuthEntryPointJwt;
+import com.libraryapp.securities.JwtUtils;
+import com.libraryapp.securities.WebSecurityConfig;
+import com.libraryapp.services.impls.UserDetailsServiceImpl;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -32,11 +35,13 @@ import com.libraryapp.entities.Person;
 import com.libraryapp.repositories.PersonRepository;
 import com.libraryapp.services.impls.PersonServiceImpl;
 
+@SuppressWarnings("unused")
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(PersonController.class)
-@Import(PersonServiceImpl.class)
-@TestPropertySource(properties = {"spring.security.enabled=false"})
+@ActiveProfiles("test")
+@Import({PersonServiceImpl.class, WebSecurityConfig.class, JwtUtils.class})
+@WithMockUser(username = "user", authorities={"ROLE_USER", "ROLE_ADMIN"})
 class PeopleControllersTests {
-
         @Autowired
         MockMvc mockMvc;
 
@@ -45,6 +50,15 @@ class PeopleControllersTests {
 
         @Autowired
         ObjectMapper mapper;
+
+        @MockBean
+        UserDetailsServiceImpl userDetailsService;
+
+        @MockBean
+        AuthEntryPointJwt authEntryPointJwt;
+
+        @Autowired
+        JwtUtils jwtUtils;
 
         Person person1 = new Person(
                         1, "Juan", "Pérez",
