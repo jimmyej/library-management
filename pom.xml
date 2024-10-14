@@ -41,7 +41,8 @@
 			**/LibraryManagementApplication.java,
 			**/entities/**,
 			**/dtos/**,
-			**/enums/**
+			**/enums/**,
+			**/securities/**
 		</sonar.exclusions>
 
 	</properties>
@@ -146,6 +147,7 @@
 						<exclude>**/entities/**</exclude>
 						<exclude>**/dtos/**</exclude>
 						<exclude>**/enums/**</exclude>
+						<exclude>**/securities/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>
