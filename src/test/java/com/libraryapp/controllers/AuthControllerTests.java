@@ -72,6 +72,11 @@ class AuthControllerTests {
 
     SignupRequest signupRequest;
     UserEntity user;
+    RoleEntity roleUser;
+
+    String jwt;
+    ResponseCookie responseCookie;
+
 
     @BeforeEach
     public void setup(){
@@ -92,22 +97,24 @@ class AuthControllerTests {
                 .updatedBy(signupRequest.getUpdatedBy())
                 .enabled(true)
                 .build();
+
+        roleUser = new RoleEntity();
+        roleUser.setRoleId(1);
+        roleUser.setRoleName(ERole.ROLE_USER);
+
+        jwt = "ftedrthdfhe5kseagehsrsjehrmksegdmed5dsersshdghnsraerhshdjsedhxfd";
+        responseCookie = ResponseCookie.from("testCookie", jwt).path("/api").maxAge(1800L).httpOnly(true).build();
     }
 
     //SIGNUP tests
     @Test
     void registerUser_withoutRole_success() throws Exception {
-
-        RoleEntity roleEntity = new RoleEntity();
-        roleEntity.setRoleId(1);
-        roleEntity.setRoleName(ERole.ROLE_USER);
-
         UserEntity newUser = user;
         newUser.setUserId(1);
 
         Mockito.when(userRepository.existsByUsername(signupRequest.getUsername())).thenReturn(false);
         Mockito.when(userRepository.existsByEmail(signupRequest.getEmail())).thenReturn(false);
-        Mockito.when(roleRepository.findByRoleName(ERole.ROLE_USER)).thenReturn(Optional.of(roleEntity));
+        Mockito.when(roleRepository.findByRoleName(ERole.ROLE_USER)).thenReturn(Optional.of(roleUser));
         Mockito.when(userRepository.save(user)).thenReturn(newUser);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -171,10 +178,6 @@ class AuthControllerTests {
     }
 
     void registerExistingUser(boolean existsUsername, boolean existsEmail) throws  Exception{
-        RoleEntity roleEntity = new RoleEntity();
-        roleEntity.setRoleId(1);
-        roleEntity.setRoleName(ERole.ROLE_USER);
-
         Mockito.when(userRepository.existsByUsername(signupRequest.getUsername())).thenReturn(existsUsername);
         if(!existsUsername){
             Mockito.when(userRepository.existsByEmail(signupRequest.getEmail())).thenReturn(existsEmail);
@@ -199,12 +202,7 @@ class AuthControllerTests {
         loginRequest.setUsername(username);
         loginRequest.setPassword("123456789");
 
-        RoleEntity roleEntity = new RoleEntity();
-        roleEntity.setRoleId(1);
-        roleEntity.setRoleName(ERole.ROLE_USER);
-
-        Set<RoleEntity> roles = Set.of(roleEntity);
-
+        Set<RoleEntity> roles = Set.of(roleUser);
         user.setRoles(roles);
 
         List<GrantedAuthority> authorities = user.getRoles().stream()
@@ -219,8 +217,6 @@ class AuthControllerTests {
                 .build();
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        String jwt = "ftedrthdfhe5kseagehsrsjehrmksegdmed5dsersshdghnsraerhshdjsedhxfd";
-        ResponseCookie responseCookie = ResponseCookie.from("testCookie", jwt).path("/api").maxAge(1800L).httpOnly(true).build();
 
         Mockito.when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
         Mockito.when(jwtUtils.generateJwtCookie(userDetails)).thenReturn(responseCookie);
@@ -237,9 +233,6 @@ class AuthControllerTests {
     //SIGNOUT tests
     @Test
     void logoutUser_success() throws Exception {
-        String jwt = "ftedrthdfhe5kseagehsrsjehrmksegdmed5dsersshdghnsraerhshdjsedhxfd";
-        ResponseCookie responseCookie = ResponseCookie.from("testCookie", jwt).path("/api").maxAge(1800L).httpOnly(true).build();
-
         Mockito.when(jwtUtils.getCleanJwtCookie()).thenReturn(responseCookie);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -248,7 +241,6 @@ class AuthControllerTests {
                         .accept(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk());
-
     }
 
 }

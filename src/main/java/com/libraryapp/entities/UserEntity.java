@@ -1,6 +1,7 @@
 package com.libraryapp.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.libraryapp.enums.CommonConstants;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -65,10 +66,10 @@ public class UserEntity {
     @PrePersist
     public void prePersist() {
         if (createdBy == null) {
-            createdBy = "library.bot";
+            createdBy = CommonConstants.SYSTEM_USER.name();
         }
         if (updatedBy == null) {
-            updatedBy = "library.bot";
+            updatedBy = CommonConstants.SYSTEM_USER.name();
         }
     }
 }
