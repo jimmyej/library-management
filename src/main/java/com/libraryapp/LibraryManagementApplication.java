@@ -11,5 +11,3 @@ public class LibraryManagementApplication {
 	}
 
 }
-// API interface programming application
-// Endpoint --> enfocado al servicio

@@ -39,6 +39,7 @@
 		<sonar.tests.exclusions>**/LibraryManagementApplicationTests.java,</sonar.tests.exclusions>
 		<sonar.exclusions>
 			**/LibraryManagementApplication.java,
+			**/CommandLineAppStartupRunner.java,
 			**/entities/**,
 			**/dtos/**,
 			**/enums/**,
@@ -144,6 +145,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/LibraryManagementApplication.class</exclude>
+						<exclude>**/CommandLineAppStartupRunner.class</exclude>
 						<exclude>**/entities/**</exclude>
 						<exclude>**/dtos/**</exclude>
 						<exclude>**/enums/**</exclude>

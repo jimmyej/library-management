@@ -26,6 +26,10 @@ services:
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - LIBRARY_SECRET=${JWT_SECRET}
+      - INITIAL_ROLES=${INITIAL_ROLES}
+      - INITIAL_USER=${INITIAL_USER}
+      - INITIAL_PASSWORD=${INITIAL_PASSWORD}
+      - INITIAL_EMAIL=${INITIAL_EMAIL}
     networks:
       - library-private-network
     depends_on:

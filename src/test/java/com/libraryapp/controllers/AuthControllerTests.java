@@ -10,6 +10,7 @@ import com.libraryapp.repositories.RoleRepository;
 import com.libraryapp.repositories.UserRepository;
 import com.libraryapp.securities.JwtUtils;
 import com.libraryapp.securities.UserDetailsImpl;
+import com.libraryapp.services.impls.AuthServiceImpl;
 import com.libraryapp.services.impls.UserDetailsServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,6 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SuppressWarnings("unused")
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(AuthController.class)
+@Import({AuthServiceImpl.class})
 @WithMockUser(username = "user")
 class AuthControllerTests {
 

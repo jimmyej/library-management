@@ -22,4 +22,8 @@ public class RoleEntity {
     @Enumerated(EnumType.STRING)
     @Column(length = 50, unique = true)
     private ERole roleName;
+
+    public RoleEntity(ERole roleName) {
+        this.roleName = roleName;
+    }
 }
